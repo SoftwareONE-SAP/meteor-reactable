@@ -47,15 +47,15 @@ var config = {
   },
   fields: [
     {
-      name: 'forename',
-      title: 'First Name',
+      key: 'forename',
+      label: 'First Name',
     },
     {
-      name: 'surname',
-      title: 'Last Name',
+      key: 'surname',
+      label: 'Last Name',
     },
     {
-      name: 'rating',
+      key: 'rating',
     }
   ],
 };
@@ -154,3 +154,48 @@ var config = {
   }
 }
 ```
+
+### config.fields [Array]
+
+This item is an array of objects, where each object defines the contents of a table column. The order of the field definitions matches the order of the columns in the table. Each object can contain the following:
+
+#### 1. label
+
+This is an optional string which contains the contents of the column header. So the following definition:
+
+```javascript
+var config = {
+  fields: [
+    { label: "First Name" },
+    { label: "Last Name"  }
+  ]
+}
+```
+
+Would create the following table:
+
+```html
+<table>
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last name</th>
+    </tr>
+  </thead>
+</table>
+```
+
+#### 2. key
+
+This is an optional string that contains the name of a key in the MongoDB from which we want to retrieve the value to display in the table body. If "label" isn't supplied, then the table column header is derived from this value instead, replacing underscores with spaces and capitalizing the first letter of each word. So the following definition would create the exact same table as above:
+
+```javascript
+var config = {
+  fields: [
+    { key: "first_name" },
+    { key: "last_name"  }
+  ]
+}
+```
+
+But would actually populate the table with data too.
