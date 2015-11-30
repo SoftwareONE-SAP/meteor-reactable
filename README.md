@@ -78,7 +78,7 @@ This object describes the source of the data for the table and is required
 
 ### config.source.collection [Object | Array]
 
-This item is required. It can either be an instance of Mongo.Collection (as per the [minimal example](#example-minimal)), or it can be a raw array containing javascript objects, e.g:
+This item is required. It can either be an instance of Mongo.Collection (as per the minimal example), or it can be a raw array containing javascript objects, e.g:
 
 ```javascript
 var config = {
@@ -106,7 +106,7 @@ var config = {
 };
 ```
 
-Reactable will handle subscribing to and unsubscribing from the subscription named "smart_people" when the React component is mounted/unmounted. When reactable has a handle to the subscription it can also make decisions based on whether or not the subscription is ready. For example, it can avoid re-rendering the component repeatedly as lots of data is transferred down the wire (if you choose so), or it can display a "Loading" graphic.
+Reactable will handle subscribing to and unsubscribing from the subscription named "smart_people" when the React component is mounted/unmounted. When Reactable has a handle to the subscription it can also make decisions based on whether or not the subscription is ready. For example, it can avoid re-rendering the component repeatedly as lots of data is transferred down the wire (if you choose so), or it can display a "Loading" graphic.
 
 Rather than passing a string, you can just pass a subscription object directly:
 
