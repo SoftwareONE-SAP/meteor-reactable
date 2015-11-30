@@ -78,6 +78,9 @@ ReactableData = React.createClass({
       context = subscribe.context || Meteor;
       name    = subscribe.name;
       args    = subscribe.args || [];
+      if (typeof args === 'function') {
+        args = args.call(this);
+      }
     } else if (typeof subscribe === 'string') {
       context = Meteor;
       name    = subscribe;
