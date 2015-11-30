@@ -1,3 +1,7 @@
+/**
+ * This component handles subscriptions and fetching data
+ */
+
 ReactableData = React.createClass({
 
   mixins: [ ReactMeteorData ],

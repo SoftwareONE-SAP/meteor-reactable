@@ -1,3 +1,8 @@
+/**
+ * Define some PropTypes here that are used in multiple React components
+ * to avoid duplication
+ */
+
 const T = React.PropTypes;
 
 ReactableTypeField = T.shape({
