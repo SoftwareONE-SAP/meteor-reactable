@@ -25,6 +25,10 @@ Package.onUse(function(api) {
     'lib/PropTypes.jsx',
     'lib/components/Reactable.jsx',
     'lib/components/ReactableData.jsx',
+    'lib/components/ReactableUI.jsx',
+    'lib/components/ReactableTable.jsx',
+    'lib/components/ReactableTableHead.jsx',
+    'lib/components/ReactableTableRow.jsx',
   ]);
 
   api.export('Reactable');

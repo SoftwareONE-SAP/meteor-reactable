@@ -35,9 +35,11 @@ ReactableData = React.createClass({
 
   render () {
     return (
-      <pre>
-        { JSON.stringify(this.data) }
-      </pre>
+      <ReactableUI
+        fields = { this.props.fields }
+        rows   = { this.data.rows    }
+        ready  = { this.data.ready   }
+      />
     );
   },
 
