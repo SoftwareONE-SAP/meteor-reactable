@@ -11,8 +11,9 @@ ReactableTableRow = React.createClass({
 
       let value = this.props.data[ field.name ];
 
-      if (value instanceof Date) value = value.toLocaleString();
-      if (value !== null && typeof value === 'object') value = value.toString();
+      if (value !== null && typeof value === 'object') {
+        value = value.toString();
+      }
 
       return (
         <td>
