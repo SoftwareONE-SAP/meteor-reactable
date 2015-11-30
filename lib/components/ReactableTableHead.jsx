@@ -10,7 +10,7 @@ ReactableTableHead = React.createClass({
       const name  = field.name;
       const title = field.hasOwnProperty('title') ? field.title : name;
       return (
-        <th key={ name }>
+        <th>
           { title }
         </th>
       );
@@ -18,9 +18,7 @@ ReactableTableHead = React.createClass({
 
     return (
       <thead>
-        <tr>
-          { cells }
-        </tr>
+        { React.createElement('tr', {}, ...cells) }
       </thead>
     );
   }
