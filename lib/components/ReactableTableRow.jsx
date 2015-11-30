@@ -8,8 +8,11 @@ ReactableTableRow = React.createClass({
   render () {
 
     const cells = this.props.fields.map(field => {
+      let value;
 
-      let value = this.props.data[ field.name ];
+      if (field.hasOwnProperty('key')) {
+        value = this.props.data[ field.key ];
+      }
 
       if (value !== null && typeof value === 'object') {
         value = value.toString();

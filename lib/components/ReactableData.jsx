@@ -112,7 +112,7 @@ ReactableData = React.createClass({
     let options = {};
 
     options.fields = this.props.fields.reduce((obj, field) => {
-      if (field.hasOwnProperty('name')) obj[ field.name ] = 1;
+      if (field.hasOwnProperty('key')) obj[ field.key ] = 1;
       return obj;
     }, {});
 

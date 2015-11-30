@@ -6,8 +6,8 @@
 const T = React.PropTypes;
 
 ReactableTypeField = T.shape({
-    name:  T.string.isRequired,
-    title: T.string,
+  key:   T.string.isRequired,
+  label: T.string,
 });
 
 ReactableTypeSource = T.shape({
