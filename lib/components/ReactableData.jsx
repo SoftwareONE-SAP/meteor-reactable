@@ -11,11 +11,21 @@ ReactableData = React.createClass({
     const collection = source.collection;
 
     let data = {
-      ready: true,
-      rows:  collection,
+      ready: null,
+      rows:  null,
     };
 
-    if (!Array.isArray(collection)) {
+    if (Array.isArray(collection)) {
+      data.ready = true;
+      data.rows = (id) => {
+        collection.map(item => {
+          if (!item.hasOwnProperty('_id')) {
+            item._id = ++id;
+          }
+          return item;
+        });
+      }(0);
+    } else {
       data.ready = this.subscribe().ready();
       data.rows  = collection.find(this.selector(), this.options()).fetch();
     }
