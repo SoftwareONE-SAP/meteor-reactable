@@ -21,4 +21,12 @@ Package.onUse(function(api) {
     'helpers.jsx',
   ], 'client');
 
+  api.addFiles([
+    'lib/PropTypes.jsx',
+    'lib/components/Reactable.jsx',
+    'lib/components/ReactableData.jsx',
+  ]);
+
+  api.export('Reactable');
+
 });
