@@ -12,6 +12,13 @@ Package.onUse(function(api) {
   api.use([
     'react',
     'react-meteor-data',
+    'react-template-helper',
+    'templating',
   ]);
+
+  api.addFiles([
+    'template.html',
+    'helpers.jsx',
+  ], 'client');
 
 });
