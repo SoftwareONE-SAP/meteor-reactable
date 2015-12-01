@@ -9,7 +9,7 @@ ReactableTableHead = React.createClass({
     const cells = this.props.fields.map(field => {
       return (
         <ReactableTableHeadCell
-          key     = { field.key }
+          name    = { field.name }
           label   = { field.label }
           classes = { field.thClasses }
         />

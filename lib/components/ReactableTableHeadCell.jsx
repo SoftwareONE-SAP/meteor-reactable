@@ -1,9 +1,17 @@
 ReactableTableHeadCell = React.createClass({
 
   propTypes: {
-    key:     React.PropTypes.string,
+    name:    React.PropTypes.string,
     label:   React.PropTypes.string,
     classes: React.PropTypes.string,
+  },
+
+  getDefaultProps () {
+    return {
+      name:    '',
+      label:   '',
+      classes: '',
+    }
   },
 
   render () {
@@ -16,10 +24,10 @@ ReactableTableHeadCell = React.createClass({
 
   getClasses () {
     let classes = '';
-    if (this.props.hasOwnProperty('thClasses')) {
-      classes = this.props.thClasses;
+    if (this.props.classes.length) {
+      classes = this.props.classes;
       if (typeof classes === 'function') {
-        classes = classes.call(this, this.props.key, this.props.getTitle());
+        classes = classes.call(this, this.props.name, this.props.getTitle());
       }
       if (Array.isArray(classes)) {
         classes = classes.filter(c => {
@@ -33,12 +41,10 @@ ReactableTableHeadCell = React.createClass({
   getTitle () {
     let title = '';
 
-    console.log("FOO", this.props);
-
-    if (this.props.hasOwnProperty('label')) {
+    if (this.props.label.length) {
       title = this.props.label;
-    } else if (this.props.hasOwnProperty('key')) {
-      title = this.props.key.split('_').map(word => {
+    } else if (this.props.name.length) {
+      title = this.props.name.split('_').map(word => {
         return word.charAt(0).toUpperCase() + word.slice(1);
       }).join(' ');
     }

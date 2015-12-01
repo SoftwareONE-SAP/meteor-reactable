@@ -10,8 +10,8 @@ ReactableTableRow = React.createClass({
     const cells = this.props.fields.map(field => {
       let value;
 
-      if (field.hasOwnProperty('key')) {
-        value = this.props.data[ field.key ];
+      if (field.hasOwnProperty('name')) {
+        value = this.props.data[ field.name ];
       }
 
       let classes = '';

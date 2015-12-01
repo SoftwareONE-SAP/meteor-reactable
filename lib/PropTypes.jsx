@@ -8,7 +8,7 @@ const T = React.PropTypes;
 ReactableTypeClasses = T.oneOfType([ T.string, T.arrayOf(T.string), T.func ]);
 
 ReactableTypeField = T.shape({
-  key:       T.string.isRequired,
+  name:      T.string.isRequired,
   label:     T.string,
   transform: T.func,
   tdClasses: ReactableTypeClasses,

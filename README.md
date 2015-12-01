@@ -47,15 +47,15 @@ var config = {
   },
   fields: [
     {
-      key: 'forename',
+      name: 'forename',
       label: 'First Name',
     },
     {
-      key: 'surname',
+      name: 'surname',
       label: 'Last Name',
     },
     {
-      key: 'rating',
+      name: 'rating',
     }
   ],
 };
@@ -183,7 +183,7 @@ var config = {
   },
   fields: [
     {
-      key: 'name',
+      name: 'name',
       classes: function (name, rowData) {
         return rowData.sex === 'male' ? 'blue' : 'pink';
       }
@@ -224,15 +224,15 @@ Would create the following table:
 </table>
 ```
 
-#### 2. key [String]
+#### 2. name [String]
 
 This is an optional string that contains the name of a key in the MongoDB from which we want to retrieve the value to display in the table body. If "label" isn't supplied, then the table column header is derived from this value instead, replacing underscores with spaces and capitalizing the first letter of each word. So the following definition would create the exact same table as above:
 
 ```javascript
 var config = {
   fields: [
-    { key: "first_name" },
-    { key: "last_name"  }
+    { name: "first_name" },
+    { name: "last_name"  }
   ]
 }
 ```
@@ -247,7 +247,7 @@ This is an optional function which will transform a value before putting it into
 var config = {
   fields: [
     {
-      key: "first_name",
+      name: "first_name",
       transform: function (fname, data) {
         return fname.toUpperCase();
       },
@@ -276,7 +276,7 @@ Optionally specify a list of classes to be added to the table body <td/> for thi
 var config = {
   fields: [
     {
-      key:     "first_name",
+      name:    "first_name",
       classes: "blue strong", // or:
       classes: ["blue", "strong"], // or:
       classes: function (fname, rowData) {
@@ -298,7 +298,7 @@ If you want to override what is used for a particular fields table cell, you can
 var config = {
   fields: [
     {
-      key: "first_name",
+      name: "first_name",
       td: React.createClass({
         render: function () {
           return (
