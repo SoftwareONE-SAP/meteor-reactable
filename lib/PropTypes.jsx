@@ -15,6 +15,7 @@ ReactableTypeField = T.shape({
   thInner:   T.func, // React class
   tdClasses: ReactableTypeClasses,
   thClasses: ReactableTypeClasses,
+  sortable:  T.number,
 });
 
 ReactableTypeSource = T.shape({

@@ -19,11 +19,34 @@ Reactable = React.createClass({
   },
 
   render () {
+
+    let props = { ...this.props };
+    delete props.children;
+    props.fields = props.fields.map(field => {
+      return Reactable.applyFieldDefaults(field);
+    });
+
     return (
-      <ReactableData {...this.props}>
+      <ReactableData { ...props }>
         { this.props.children }
       </ReactableData>
     );
   },
+
+  statics: () => {
+
+    let fieldDefaults = [];
+
+    return {
+      setFieldDefaults (callback) {
+        fieldDefaults.push(callback);
+      },
+      applyFieldDefaults (field) {
+        fieldDefaults.forEach(func => field = func(field));
+        return field;
+      },
+    };
+
+  }(),
 
 });

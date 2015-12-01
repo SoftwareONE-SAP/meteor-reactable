@@ -341,3 +341,46 @@ var config = {
   ]
 }
 ```
+
+## Global Configuration
+
+#### Reactable.setFieldDefaults [Function]
+
+This feature is useful when you find yourself writing a lot of boiler plate code in your field definitions to set custom templates or classes. Given the following example:
+
+```javascript
+var config = {
+  fields: [
+    {
+      name: 'first_name',
+      sortable: 1,
+      classes: 'sortable',
+      thInner: SortableHeader,
+    },
+    {
+      name: 'last_name',
+      sortable: 1,
+      classes: 'sortable',
+      thInner: SortableHeader,
+    },
+  ]
+}
+```
+
+Wouldn't it be nice if you could just say that any field with a 'sortable' key automatically gets the 'sortable' class and uses the SortableHeader component for thInner? You can use setFieldDefaults to do this. It takes a callback function which takes a field as input and returns the replacement field. For example:
+
+```javascript
+Reactable.setFieldDefaults(function(field){
+
+  if (field.sortable) {
+    field.classes = 'sortable';
+    field.thInner = SortableHeader;
+  }
+
+  return field;
+});
+```
+
+**Be careful** when overwriting things like field.classes and field.thInner. Remember that they can potentially already be set and they could potentially contain different types.
+
+setFieldDefaults can be called multiple times with multiple callbacks. They are each run in turn.
