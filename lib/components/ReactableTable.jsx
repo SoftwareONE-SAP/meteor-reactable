@@ -2,8 +2,8 @@ ReactableTable = React.createClass({
 
   propTypes: {
     classes: ReactableTypeClasses.isRequired,
-    fields:       React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    rows:         React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    fields:  React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    rows:    React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   },
 
   render () {

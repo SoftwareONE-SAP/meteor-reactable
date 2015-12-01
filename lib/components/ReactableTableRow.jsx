@@ -15,10 +15,10 @@ ReactableTableRow = React.createClass({
       }
 
       let classes = '';
-      if (field.hasOwnProperty('classes')) {
-        classes = field.classes;
-        if (typeof field.classes === 'function') {
-          classes = field.classes.call(this, value, this.props.data);
+      if (field.hasOwnProperty('tdClasses')) {
+        classes = field.tdClasses;
+        if (typeof classes === 'function') {
+          classes = classes.call(this, value, this.props.data);
         }
         if (Array.isArray(classes)) {
           classes = classes.filter(c => {

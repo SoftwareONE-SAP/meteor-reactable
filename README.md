@@ -268,9 +268,9 @@ rowData = {
 var value = transform(rowData.first_name, rowData);
 ```
 
-#### 4. classes [String | Array | Function]
+#### 4. tdClasses [String | Array | Function]
 
-Optionally specify a list of classes to be added to the DOM element for this table cell. If supplied an Array then it is joined with spaces. If supplied a Function, then that function is called with the cell value as the first argument and rest of the row data as the second argument. It must return either a String or an Array of Strings. For example:
+Optionally specify a list of classes to be added to the table body <td/> for this cell. If supplied an Array then it is joined with spaces. If supplied a Function, then that function is called with the cell value as the first argument and rest of the row data as the second argument. It must return either a String or an Array of Strings. For example:
 
 ```javascript
 var config = {
