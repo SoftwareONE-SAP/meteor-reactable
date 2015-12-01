@@ -27,7 +27,6 @@ ReactableData = React.createClass({
           return doc;
         });
       }(0);
-      console.log(data.rows);
     } else {
       data.ready = this.subscribe().ready();
       data.rows  = collection.find(this.selector(), this.options()).fetch();
