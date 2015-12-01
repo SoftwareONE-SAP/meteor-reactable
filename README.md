@@ -13,7 +13,7 @@ React.render(<Reactable {...config}/>, domLocation);
 ###### Blaze/Spacebars:
 
 ```
-{{> Reactable config=config}}
+{{> Reactable config}}
 ```
 
 As you might have guessed, all the magic happens in the "config" object.
@@ -63,7 +63,7 @@ var config = {
 
 Assuming a suitable subscription was in place to populate the "people" collection, the following reactive table would be produced:
 
-First Name | Last Name | rating
+First Name | Last Name | Rating
 -----------|-----------|-------
 Mike       | Cardwell  | 10
 Jean-Luc   | Picard    | 9
