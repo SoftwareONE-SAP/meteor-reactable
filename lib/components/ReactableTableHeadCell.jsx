@@ -4,6 +4,7 @@ ReactableTableHeadCell = React.createClass({
     name:    React.PropTypes.string,
     label:   React.PropTypes.string,
     classes: ReactableTypeClasses,
+    thInner: React.PropTypes.func, // React class
   },
 
   getDefaultProps () {
@@ -15,9 +16,25 @@ ReactableTableHeadCell = React.createClass({
   },
 
   render () {
+    const title = this.getTitle();
+
+    let inner;
+    if (this.props.thInner) {
+      const Component = this.props.thInner;
+      inner = (
+        <Component
+          name  = { this.props.name }
+          label = { this.props.label }
+          title = { title }
+        />
+      );
+    } else {
+      inner = title;
+    }
+
     return (
       <th className={ this.getClasses() }>
-        { this.getTitle() }
+        { inner }
       </th>
     );
   },

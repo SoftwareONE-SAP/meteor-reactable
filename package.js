@@ -16,6 +16,10 @@ Package.onUse(function(api) {
     'templating',
   ]);
 
+  api.imply([
+    'react',
+  ]);
+
   api.addFiles([
     'template.html',
     'helpers.jsx',

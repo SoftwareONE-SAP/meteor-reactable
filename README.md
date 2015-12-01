@@ -318,3 +318,26 @@ var config = {
 ```
 
 `this.props.value` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `this.props.row`. `this.props.classes` will only be populated if you have set something for `classes` in the field definition. Note, the root DOM element that you return from this React class **must** be a `<td/>`
+
+#### 7. thInner [React class]
+
+This works the same as `field.td` with a few differences. Firstly it applies to the column header <th/>. Secondly, it applies to contents **inside** the <th/>. So you should render a span or something else which is valid inside a <th/> rather than rendering a <th/> it's self. Props passed to the class include "name", "label" and also "title" which is calculated from the label if supplied and name if not. Here is an example where the column title is wrapped inside an anchor tag:
+
+```javascript
+var config = {
+  fields: [
+    {
+      name: "first_name",
+      thInner: React.createClass({
+        render: function () {
+          return (
+            <a href={ '/wibble?name=' + this.props.name }>
+              { this.props.title }
+            </a>
+          );
+        }
+      })
+    }
+  ]
+}
+```
