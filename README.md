@@ -72,7 +72,24 @@ Jean-Luc   | Picard    | 9
 
 The rest of this document explains all of the other configuration values which are available to make your reactive tables much more interesting/powerful.
 
-### config.source
+### config.tableClasses [String | Array | Function]
+
+This item provides the list of classes to add to the `<table/>` tag. If it is a string it is added as is. If it is an array of strings, they are joined with spaces before being added. If it is a function, it must return a string or array of strings to be used. When it is a function, it is called within the context of the ReactableTable render method so has access to the field definitions and row data. Example:
+
+```javascript
+var config = {
+  tableClasses: "blue strong", // or:
+  tableClasses: ["blue strong"], // or:
+  tableClasses: function () {
+    var classes = ["blue", "strong"];
+    if (this.props.fields.length > 1) classes.push('multi-column');
+    if (this.props.rows.length   > 1) classes.push('multi-rows');  
+    return classes; // or classes.join(' ')
+  }
+}
+```
+
+### config.source [Object]
 
 This object describes the source of the data for the table and is required
 

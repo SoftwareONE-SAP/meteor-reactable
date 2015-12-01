@@ -48,7 +48,7 @@ ReactableTableRow = React.createClass({
           row     = { this.props.data }
         />
       );
-    }.bind(this));
+    });
 
     return React.createElement('tr', {}, ...cells);
   }
