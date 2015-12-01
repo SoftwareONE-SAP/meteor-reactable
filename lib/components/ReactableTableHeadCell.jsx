@@ -3,7 +3,7 @@ ReactableTableHeadCell = React.createClass({
   propTypes: {
     name:    React.PropTypes.string,
     label:   React.PropTypes.string,
-    classes: React.PropTypes.string,
+    classes: ReactableTypeClasses,
   },
 
   getDefaultProps () {
@@ -23,17 +23,17 @@ ReactableTableHeadCell = React.createClass({
   },
 
   getClasses () {
-    let classes = '';
-    if (this.props.classes.length) {
-      classes = this.props.classes;
-      if (typeof classes === 'function') {
-        classes = classes.call(this, this.props.name, this.props.getTitle());
-      }
-      if (Array.isArray(classes)) {
-        classes = classes.filter(c => {
-          return typeof c === 'string' && c.length;
-        }).join(' ');
-      }
+    let classes = this.props.classes;
+    if (typeof classes === 'function') {
+      classes = classes.call(this, this.props.name, this.props.label);
+    }
+    if (typeof classes === 'undefined' || classes === null) {
+      classes = '';
+    }
+    if (Array.isArray(classes)) {
+      classes = classes.filter(c => {
+        return typeof c === 'string' && c.length;
+      }).join(' ');
     }
     return classes;
   },

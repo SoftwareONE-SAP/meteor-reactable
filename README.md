@@ -290,7 +290,11 @@ var config = {
 };
 ```
 
-#### 4. td [React class]
+#### 5. thClasses [String | Array | Function]
+
+Works the same as tdClasses, except for the table head <th/>. First argument for the function is the `field.name`, and second argument is the `field.label`
+
+#### 6. td [React class]
 
 If you want to override what is used for a particular fields table cell, you can create a React class and pass it through. Below is an example (using JSX) where we simply wrap the value that would have been placed in the cell with a `<strong/>` tag:
 
