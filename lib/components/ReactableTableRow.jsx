@@ -15,7 +15,7 @@ ReactableTableRow = React.createClass({
       }
 
       if (field.hasOwnProperty('transform')) {
-        value = field.transform.call(this, value);
+        value = field.transform.call(this, value, data);
       }
 
       if (value !== null && typeof value === 'object') {

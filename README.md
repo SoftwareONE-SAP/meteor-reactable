@@ -209,10 +209,22 @@ var config = {
   fields: [
     {
       key: "first_name",
-      transform: function (fname) {
+      transform: function (fname, data) {
         return fname.toUpperCase();
       },
     }
   ]
 }
+```
+
+The second argument "data" is an object containing all of the data for this row in case your transform relies on information from one of the other fields. For example, when determinining the value to go in the "first_name" column for a particular row, it might be called as follows:
+
+```javascript
+rowData = {
+  first_name: 'Mike',
+  last_name:  'Cardwell',
+  rating:     10
+};
+
+var value = transform(rowData.first_name, rowData);
 ```
