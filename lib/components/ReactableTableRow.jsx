@@ -14,6 +14,10 @@ ReactableTableRow = React.createClass({
         value = this.props.data[ field.key ];
       }
 
+      if (field.hasOwnProperty('transform')) {
+        value = field.transform.call(this, value);
+      }
+
       if (value !== null && typeof value === 'object') {
         value = value.toString();
       }
@@ -23,7 +27,7 @@ ReactableTableRow = React.createClass({
           { value }
         </td>
       );
-    });
+    }.bind(this));
 
     return React.createElement('tr', {}, ...cells);
   }

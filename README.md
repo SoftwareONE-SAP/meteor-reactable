@@ -199,3 +199,20 @@ var config = {
 ```
 
 But would actually populate the table with data too.
+
+#### 3. transform
+
+This is an optional function which will transform a value before putting it into the table. For example, if you wanted to display everyones first name in capital letters:
+
+```javascript
+var config = {
+  fields: [
+    {
+      key: "first_name",
+      transform: function (fname) {
+        return fname.toUpperCase();
+      },
+    }
+  ]
+}
+```
