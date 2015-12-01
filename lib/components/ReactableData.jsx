@@ -18,13 +18,16 @@ ReactableData = React.createClass({
     if (Array.isArray(collection)) {
       data.ready = true;
       data.rows = (id) => {
-        collection.map(item => {
-          if (!item.hasOwnProperty('_id')) {
-            item._id = ++id;
-          }
-          return item;
+        const fields = this.fields();
+        return collection.map(doc => {
+          Object.keys(doc).forEach(k => {
+            if (!fields.hasOwnProperty(k)) delete doc[ k ];
+          });
+          if (!doc.hasOwnProperty('_id')) doc._id = ++id;
+          return doc;
         });
       }(0);
+      console.log(data.rows);
     } else {
       data.ready = this.subscribe().ready();
       data.rows  = collection.find(this.selector(), this.options()).fetch();
@@ -110,13 +113,19 @@ ReactableData = React.createClass({
    * Returns options to be used in the Mongo query
    */
   options () {
-    let options = {};
+    return {
+      fields: this.fields(),
+    };
+  },
 
-    options.fields = this.props.fields.reduce((obj, field) => {
+  fields () {
+    let fields = this.props.fields.reduce((obj, field) => {
       if (field.hasOwnProperty('key')) obj[ field.key ] = 1;
       return obj;
     }, {});
-
-    return options;
-  },
+    if (this.props.source.hasOwnProperty('fields')) {
+      this.props.source.fields.forEach(field => fields[ field ] = 1);
+    }
+    return fields;
+  }
 });

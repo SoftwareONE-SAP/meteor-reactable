@@ -172,6 +172,28 @@ var config = {
 }
 ```
 
+### config.source.fields [Array]
+
+This optional array contains a list of document keys which we wish to have access to. As with MongoDB you also get the _id. If the collection is an array rather than a Mongo collection and an _id doesn't exist, a fake one is added. Any key which has an entry in `config.fields` (discussed next) will automatically be in this list, so usually you don't need to specify it. One example of when you might need this functionality:
+
+```javascript
+var config = {
+  source: {
+    fields: ['sex'],
+  },
+  fields: [
+    {
+      key: 'name',
+      classes: function (name, rowData) {
+        return rowData.sex === 'male' ? 'blue' : 'pink';
+      }
+    },
+  ]
+}
+```
+
+In this example, there is no "sex" field, but we still need access to the content of the "sex" field in order to specify what class to use on the name field. Without `source.fields` we wouldn't have access to that data.
+
 ### config.fields [Array]
 
 This item is an array of objects, where each object defines the contents of a table column. The order of the field definitions matches the order of the columns in the table. Each object can contain the following:

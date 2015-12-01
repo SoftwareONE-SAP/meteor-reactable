@@ -16,6 +16,7 @@ ReactableTypeField = T.shape({
 
 ReactableTypeSource = T.shape({
   collection: T.oneOfType([ T.object, T.arrayOf(T.object) ]).isRequired,
+  fields:     T.arrayOf(T.string),
   selector:   T.oneOfType([ T.object, T.func ]),
   subscribe:  T.oneOfType([
     T.string,
