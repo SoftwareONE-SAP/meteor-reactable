@@ -35,10 +35,18 @@ ReactableTableRow = React.createClass({
         value = value.toString();
       }
 
+      if (value === null || typeof value === 'undefined') {
+        value = '';
+      }
+
+      const TableCell = field.hasOwnProperty('td') ? field.td : ReactableTableCell;
+
       return (
-        <td className={ classes }>
-          { value }
-        </td>
+        <TableCell
+          value   = { value }
+          classes = { classes }
+          row     = { this.props.data }
+        />
       );
     }.bind(this));
 

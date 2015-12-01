@@ -250,3 +250,28 @@ var config = {
   ]
 };
 ```
+
+#### 4. td [React class]
+
+If you want to override what is used for a particular fields table cell, you can create a React class and pass it through. Below is an example (using JSX) where we simply wrap the value that would have been placed in the cell with a `<strong/>` tag:
+
+```javascript
+var config = {
+  fields: [
+    {
+      key: "first_name",
+      td: React.createClass({
+        render: function () {
+          return (
+            <td className={ this.props.classes }>
+              <strong>{ this.props.value }</strong>
+            </td>
+          );
+        }
+      })
+    }
+  ]
+}
+```
+
+`this.props.value` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `this.props.row`. `this.props.classes` will only be populated if you have set something for `classes` in the field definition. Note, the root DOM element that you return from this React class **must** be a `<td/>`
