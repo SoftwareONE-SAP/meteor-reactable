@@ -12,6 +12,7 @@ ReactableTypeField = T.shape({
   label:     T.string,
   transform: T.func,
   tdClasses: ReactableTypeClasses,
+  thClasses: ReactableTypeClasses,
 });
 
 ReactableTypeSource = T.shape({

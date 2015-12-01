@@ -28,6 +28,7 @@ Package.onUse(function(api) {
     'lib/components/ReactableUI.jsx',
     'lib/components/ReactableTable.jsx',
     'lib/components/ReactableTableHead.jsx',
+    'lib/components/ReactableTableHeadCell.jsx',
     'lib/components/ReactableTableRow.jsx',
     'lib/components/ReactableTableCell.jsx',
   ]);
