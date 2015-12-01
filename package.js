@@ -14,7 +14,7 @@ Package.onUse(function(api) {
     'react-meteor-data',
     'react-template-helper',
     'templating',
-  ]);
+  ], 'client');
 
   api.addFiles([
     'template.html',
@@ -31,7 +31,7 @@ Package.onUse(function(api) {
     'lib/components/ReactableTableHeadCell.jsx',
     'lib/components/ReactableTableRow.jsx',
     'lib/components/ReactableTableCell.jsx',
-  ]);
+  ], 'client');
 
   api.export('Reactable');
 
