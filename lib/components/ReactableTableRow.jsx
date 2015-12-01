@@ -14,8 +14,21 @@ ReactableTableRow = React.createClass({
         value = this.props.data[ field.key ];
       }
 
+      let classes = '';
+      if (field.hasOwnProperty('classes')) {
+        classes = field.classes;
+        if (typeof field.classes === 'function') {
+          classes = field.classes.call(this, value, this.props.data);
+        }
+        if (Array.isArray(classes)) {
+          classes = classes.filter(c => {
+            return typeof c === 'string' && c.length;
+          }).join(' ');
+        }
+      }
+
       if (field.hasOwnProperty('transform')) {
-        value = field.transform.call(this, value, data);
+        value = field.transform.call(this, value, this.props.data);
       }
 
       if (value !== null && typeof value === 'object') {
@@ -23,7 +36,7 @@ ReactableTableRow = React.createClass({
       }
 
       return (
-        <td>
+        <td className={ classes }>
           { value }
         </td>
       );

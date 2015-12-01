@@ -159,7 +159,7 @@ var config = {
 
 This item is an array of objects, where each object defines the contents of a table column. The order of the field definitions matches the order of the columns in the table. Each object can contain the following:
 
-#### 1. label
+#### 1. label [String]
 
 This is an optional string which contains the contents of the column header. So the following definition:
 
@@ -185,7 +185,7 @@ Would create the following table:
 </table>
 ```
 
-#### 2. key
+#### 2. key [String]
 
 This is an optional string that contains the name of a key in the MongoDB from which we want to retrieve the value to display in the table body. If "label" isn't supplied, then the table column header is derived from this value instead, replacing underscores with spaces and capitalizing the first letter of each word. So the following definition would create the exact same table as above:
 
@@ -200,7 +200,7 @@ var config = {
 
 But would actually populate the table with data too.
 
-#### 3. transform
+#### 3. transform [Function]
 
 This is an optional function which will transform a value before putting it into the table. For example, if you wanted to display everyones first name in capital letters:
 
@@ -227,4 +227,26 @@ rowData = {
 };
 
 var value = transform(rowData.first_name, rowData);
+```
+
+#### 4. classes [String | Array | Function]
+
+Optionally specify a list of classes to be added to the DOM element for this table cell. If supplied an Array then it is joined with spaces. If supplied a Function, then that function is called with the cell value as the first argument and rest of the row data as the second argument. It must return either a String or an Array of Strings. For example:
+
+```javascript
+var config = {
+  fields: [
+    {
+      key:     "first_name",
+      classes: "blue strong", // or:
+      classes: ["blue", "strong"], // or:
+      classes: function (fname, rowData) {
+          var classes = ["blue", "strong"];
+          if (fname === 'Mike') classes.push('nice');
+          if (rowData.last_name === 'Cardwell') classes.push('superb');
+          return classes; // or classes.join(' ');
+      }
+    }
+  ]
+};
 ```
