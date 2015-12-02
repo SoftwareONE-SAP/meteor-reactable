@@ -27,6 +27,14 @@ ReactableData = React.createClass({
           return doc;
         });
       }(0);
+
+      if (this.props.sort) {
+        const name = this.props.sort.name;
+        data.rows = data.rows.sort((a,b) => a[ name ] > b[ name ]);
+        if (this.props.sort.direction < 0) {
+          data.rows = data.rows.reverse();
+        }
+      }
     } else {
       data.ready = this.subscribe().ready();
       data.rows  = collection.find(this.selector(), this.options()).fetch();
@@ -113,9 +121,17 @@ ReactableData = React.createClass({
    * Returns options to be used in the Mongo query
    */
   options () {
-    return {
+    let options = {
       fields: this.fields(),
     };
+
+    if (this.props.sort) {
+      let sort = {};
+      sort[ this.props.sort.name ] = this.props.sort.direction;
+      options.sort = sort;
+    }
+
+    return options;
   },
 
   fields () {

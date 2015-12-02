@@ -17,6 +17,12 @@ Reactable = React.createClass({
     fields:       T.arrayOf(ReactableTypeField).isRequired,
   },
 
+  getInitialState () {
+    return {
+      sort: this.getInitialSortState(),
+    };
+  },
+
   getDefaultProps () {
     return {
       classes:      '',
@@ -34,9 +40,28 @@ Reactable = React.createClass({
       return Reactable.applyFieldDefaults(field);
     });
 
+    props.sort = this.state.sort;
+
     return (
       <ReactableData { ...props }/>
     );
+  },
+
+  getInitialSortState () {
+    let sort = null;
+
+    this.props.fields.some(field => {
+      if (!field.hasOwnProperty('name'))     return false;
+      if (typeof field.sort !== 'object') return false;
+      if (!field.sort.default)            return false;
+      sort = {
+        name:      field.name,
+        direction: field.sort.direction || 1,
+      };
+      return true;
+    });
+
+    return sort;
   },
 
   statics: () => {

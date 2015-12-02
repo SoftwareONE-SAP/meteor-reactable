@@ -335,7 +335,7 @@ var config = {
 
 `props.children` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `props.row`. `props.classes` will only be populated if you have set something for `field.classes`. Note, the root DOM element that you return from this React class **must** be a `<td/>`
 
-#### 7. `tdInner` [ `React class` ]
+#### 7. `field.tdInner` [ `React class` ]
 
 Works the same as `field.td` except it is wrapped in the `<td/>` tag and isn't passed a `props.classes`. To get the same effect as the `config.td` example, but with less code:
 
@@ -356,7 +356,7 @@ var config = {
 }
 ```
 
-#### 8. `thInner` [ `React class` ]
+#### 8. `field.thInner` [ `React class` ]
 
 This works the same as `field.tdInner` with a few differences. Props passed to the class include `name` and `label`. `props.children` contains the suggested title calculated from the label or a cleaned up version of the name. Here is an example where the column title is wrapped inside an anchor tag:
 
@@ -378,6 +378,36 @@ var config = {
   ]
 }
 ```
+
+#### 9. `field.sort` [ 'Number' | 'Object' ]
+
+If `field.sort` exists, then the table considers that a sortable column. Sort direction is either 1 for ascending or -1 for descending to match MongoDB's sort options. When `field.sort` is specified as a number it is just a short cut for the more powerful `Object` notation. These two are the same:
+
+```javascript
+config = {
+  fields: [
+    {
+      sort: -1, // or:
+      sort: { direction: -1 },
+    }
+  ]
+}
+```
+
+When using Object notation, if you add a `default: true`, then table data will be sorted using this column by default:
+
+```javascript
+config = {
+  fields: [
+    sort: {
+      direction: 1,
+      default: true,
+    }
+  ]
+}
+```
+
+When the data source is a `Mongo.Collection`, the sorting will happen by passing sort options to the Mongo `Collection.find` function. When the data source is a non-reactive `Array`, the standard JavaScript sort function is used.
 
 ### `config.tr` [ `React class` ]
 
@@ -437,13 +467,13 @@ var config = {
   fields: [
     {
       name: 'first_name',
-      sortable: 1,
+      sort: 1,
       classes: 'sortable',
       thInner: CustomSortableHeader,
     },
     {
       name: 'last_name',
-      sortable: 1,
+      sort: 1,
       classes: 'sortable',
       thInner: CustomSortableHeader,
     },
@@ -451,12 +481,12 @@ var config = {
 }
 ```
 
-Wouldn't it be nice if you could just say that any field with a 'sortable' key automatically gets the 'sortable' class and uses the CustomSortableHeader component for `field.thInner`? You can use setFieldDefaults to do this. It takes a callback function which takes a field as input and returns the replacement field. For example:
+Wouldn't it be nice if you could just say that any field with a 'sort' key automatically gets the 'sortable' class and uses the CustomSortableHeader component for `field.thInner`? You can use setFieldDefaults to do this. It takes a callback function which takes a field as input and returns the replacement field. For example:
 
 ```javascript
 Reactable.setFieldDefaults(function(field){
 
-  if (field.sortable) {
+  if (field.sort) {
     field.classes = 'sortable';
     field.thInner = SortableHeader;
   }

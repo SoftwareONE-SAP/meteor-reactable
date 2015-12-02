@@ -16,7 +16,13 @@ ReactableTypeField = T.shape({
   thInner:   T.func, // React class
   tdClasses: ReactableTypeClasses,
   thClasses: ReactableTypeClasses,
-  sortable:  T.number,
+  sort:      T.oneOfType([
+    T.oneOf([-1, 1]),
+    T.shape({
+      direction: T.oneOf([-1, 1]),
+      default:   T.bool,
+    }),
+  ]),
 });
 
 ReactableTypeSource = T.shape({
