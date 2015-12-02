@@ -1,30 +1,16 @@
 ReactableUI = React.createClass({
 
-  propTypes: {
-    id:              React.PropTypes.string,
-    classes:         ReactableTypeClasses.isRequired,
-    tableClasses:    ReactableTypeClasses.isRequired,
-    trClasses:       ReactableTypeClasses.isRequired,
-    tr:              React.PropTypes.func, // React class
-    addTbody:        React.PropTypes.bool.isRequired,
-    fields:          React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    rows:            React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    ready:           React.PropTypes.bool.isRequired,
-    onHeadCellClick: React.PropTypes.func,
-  },
-
   render () {
+
+    let props = { ...this.props };
+    delete props.children;
+    delete props.id;
+    delete props.tableClasses;
+    props.classes = this.getClasses(this.props.tableClasses);
+
     return (
       <div id={ this.props.id } className={ this.getClasses(this.props.classes) }>
-        <ReactableTable
-          classes         = { this.getClasses(this.props.tableClasses) }
-          trClasses       = { this.props.trClasses       }
-          tr              = { this.props.tr              }
-          addTbody        = { this.props.addTbody        }
-          fields          = { this.props.fields          }
-          rows            = { this.props.rows            }
-          onHeadCellClick = { this.props.onHeadCellClick }
-        />
+        <ReactableTable {...props}/>
       </div>
     )
   },
