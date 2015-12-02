@@ -317,7 +317,7 @@ var config = {
         render: function () {
           return (
             <td className={ this.props.classes }>
-              <strong>{ this.props.value }</strong>
+              <strong>{ this.props.children }</strong>
             </td>
           );
         }
@@ -327,7 +327,7 @@ var config = {
 }
 ```
 
-`this.props.value` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `this.props.row`. `this.props.classes` will only be populated if you have set something for `classes` in the field definition. Note, the root DOM element that you return from this React class **must** be a `<td/>`
+`this.props.children` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `this.props.row`. `this.props.classes` will only be populated if you have set something for `classes` in the field definition. Note, the root DOM element that you return from this React class **must** be a `<td/>`
 
 #### 7. thInner [React class]
 

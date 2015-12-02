@@ -42,11 +42,9 @@ ReactableTableRow = React.createClass({
       const TableCell = field.hasOwnProperty('td') ? field.td : ReactableTableCell;
 
       return (
-        <TableCell
-          value   = { value }
-          classes = { classes }
-          row     = { this.props.data }
-        />
+        <TableCell classes={ classes } row={ this.props.data }>
+          { value }
+        </TableCell>
       );
     });
 
