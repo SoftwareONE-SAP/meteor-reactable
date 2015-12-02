@@ -1,7 +1,7 @@
 ReactableTable = React.createClass({
 
   propTypes: {
-    classes: ReactableTypeClasses.isRequired,
+    classes: React.PropTypes.string.isRequired,
     fields:  React.PropTypes.arrayOf(ReactableTypeField).isRequired,
     rows:    React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   },
@@ -19,29 +19,13 @@ ReactableTable = React.createClass({
     });
 
     return (
-      <table className={ this.getClasses() }>
+      <table className={ this.props.classes }>
         <ReactableTableHead fields={ this.props.fields }/>
         <tbody>
           { rows }
         </tbody>
       </table>
     );
-  },
-
-  getClasses () {
-    let classes = this.props.classes;
-
-    if (typeof classes === 'function') {
-      classes = classes.call(this);
-    }
-
-    if (Array.isArray(classes)) {
-      classes = classes.filter(c => {
-        return c !== null && typeof c !== 'undefined';
-      }).join(' ');
-    }
-
-    return classes;
   },
 
 });

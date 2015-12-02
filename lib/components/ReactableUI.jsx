@@ -11,9 +11,9 @@ ReactableUI = React.createClass({
 
   render () {
     return (
-      <div id={ this.props.id } className={ this.getClasses() }>
+      <div id={ this.props.id } className={ this.getClasses(this.props.classes) }>
         <ReactableTable
-          classes = { this.props.tableClasses }
+          classes = { this.getClasses(this.props.tableClasses) }
           fields  = { this.props.fields       }
           rows    = { this.props.rows         }
         />
@@ -21,8 +21,7 @@ ReactableUI = React.createClass({
     )
   },
 
-  getClasses () {
-    let classes = this.props.classes;
+  getClasses (classes) {
 
     if (typeof classes === 'function') {
       classes = classes.call(this);

@@ -74,7 +74,7 @@ The rest of this document explains all of the other configuration values which a
 
 ### config.classes [String | Array | Function]
 
-This item provides the list of classes to add to the root DOM element. If it is a string it is added as is. If it is an array of strings, they are joined with spaces before being added. If it is a function, it must return a string or array of strings to be used. When it is a function, it is called within the context of the ReactableTable render method so has access to the field definitions and row data. Example:
+This item provides the list of classes to add to the root DOM element. If it is a string it is added as is. If it is an array of strings, they are joined with spaces before being added. If it is a function, it must return a string or array of strings to be used. When it is a function, it is called within the context of the ReactableUI render method so has access to the field definitions and row data. Example:
 
 ```javascript
 var config = {
@@ -93,7 +93,7 @@ The class "reactable" is always included
 
 ### config.tableClasses [String | Array | Function]
 
-The same as `config.classes` except without the default "reactable" class, and it applies to the `<table/>` tag instead.
+The same as `config.classes` except without the default "reactable" class, and it applies to the `<table/>` tag instead. Has access to the same props as runs under the same context.
 
 ### config.id [String]
 
