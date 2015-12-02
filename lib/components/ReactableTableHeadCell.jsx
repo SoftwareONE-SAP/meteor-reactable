@@ -1,5 +1,7 @@
 ReactableTableHeadCell = React.createClass({
 
+  mixins: [ ReactableClasses ],
+
   propTypes: {
     name:     React.PropTypes.string,
     label:    React.PropTypes.string,
@@ -12,7 +14,6 @@ ReactableTableHeadCell = React.createClass({
     return {
       name:    '',
       label:   '',
-      classes: '',
     }
   },
 
@@ -33,7 +34,7 @@ ReactableTableHeadCell = React.createClass({
     }
 
     return (
-      <th className={ this.getClasses() } onClick={ this.onClick }>
+      <th className={ this.getClasses([this.props.classes]) } onClick={ this.onClick }>
         { inner }
       </th>
     );
@@ -43,22 +44,6 @@ ReactableTableHeadCell = React.createClass({
     if (this.props.onClick) {
       this.props.onClick(e, this.props);
     }
-  },
-
-  getClasses () {
-    let classes = this.props.classes;
-    if (typeof classes === 'function') {
-      classes = classes.call(this, this.props.name, this.props.label);
-    }
-    if (typeof classes === 'undefined' || classes === null) {
-      classes = '';
-    }
-    if (Array.isArray(classes)) {
-      classes = classes.filter(c => {
-        return typeof c === 'string' && c.length;
-      }).join(' ');
-    }
-    return classes;
   },
 
   getTitle () {

@@ -10,6 +10,8 @@ const DefaultRow = React.createClass({
 
 ReactableTableRow = React.createClass({
 
+  mixins: [ ReactableClasses ],
+
   propTypes: {
     classes: ReactableTypeClasses.isRequired,
     tr:      React.PropTypes.func, // React class
@@ -27,21 +29,10 @@ ReactableTableRow = React.createClass({
         value = this.props.data[ field.name ];
       }
 
-      let classes = '';
-      if (field.hasOwnProperty('tdClasses')) {
-        classes = field.tdClasses;
-        if (typeof classes === 'function') {
-          classes = classes.call(this, value, this.props.data);
-        }
-        if (Array.isArray(classes)) {
-          classes = classes.filter(c => {
-            return typeof c === 'string' && c.length;
-          }).join(' ');
-        }
-      }
+      let classes = this.getClasses([field.tdClasses], value);
 
       if (field.hasOwnProperty('transform')) {
-        value = field.transform.call(this, value, this.props.data);
+        value = field.transform.call(this, value);
       }
 
       if (value !== null && typeof value === 'object') {
@@ -72,24 +63,10 @@ ReactableTableRow = React.createClass({
 
     const Row = this.props.tr || DefaultRow;
     return React.createElement(Row, {
-      classes: this.getClasses(),
+      classes: this.getClasses([this.props.classes]),
       fields:  this.props.fields,
       data:    this.props.data,
       count:   this.props.count,
     }, ...cells);
   },
-
-  getClasses () {
-    let classes = this.props.classes;
-    if (typeof classes === 'function') {
-      classes = classes.call(this, this.props.count);
-    }
-    if (Array.isArray(classes)) {
-      classes = classes.filter(c => {
-        return typeof c === 'string' && c.length;
-      }).join(' ');
-    }
-    return classes;
-  },
-
 });

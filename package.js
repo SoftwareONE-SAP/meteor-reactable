@@ -23,6 +23,7 @@ Package.onUse(function(api) {
 
   api.addFiles([
     'lib/PropTypes.jsx',
+    'lib/mixins/ReactableClasses.jsx',
     'lib/components/Reactable.jsx',
     'lib/components/ReactableData.jsx',
     'lib/components/ReactableUI.jsx',
