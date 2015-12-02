@@ -2,6 +2,8 @@
 
 A [Meteor](https://meteor.com) library for displaying reactive data in a HTML table. This library uses [React](https://facebook.github.io/react/) internally and exports a React component named **Reactable**. For projects which use Blaze templates, a helper template is also exported of the same name so that you don't have to explicitly use React in your own project.
 
+**WARNING** - This is a very new library and is currently in heavily active development and its API will definitely change in various backwards incompatible ways. I will remove this warning when it stabilises. Use at your own risk.
+
 ## Usage
 
 ###### React/JSX
