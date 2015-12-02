@@ -1,6 +1,7 @@
 ReactableUI = React.createClass({
 
   propTypes: {
+    id:           React.PropTypes.string,
     classes:      ReactableTypeClasses.isRequired,
     tableClasses: ReactableTypeClasses.isRequired,
     fields:       React.PropTypes.arrayOf(ReactableTypeField).isRequired,
@@ -10,7 +11,7 @@ ReactableUI = React.createClass({
 
   render () {
     return (
-      <div className={ this.getClasses() }>
+      <div id={ this.props.id } className={ this.getClasses() }>
         <ReactableTable
           classes = { this.props.tableClasses }
           fields  = { this.props.fields       }

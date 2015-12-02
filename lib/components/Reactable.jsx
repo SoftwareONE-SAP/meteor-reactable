@@ -7,6 +7,7 @@ const T = React.PropTypes;
 Reactable = React.createClass({
 
   propTypes: {
+    id:           T.string,
     classes:      ReactableTypeClasses,
     tableClasses: ReactableTypeClasses,
     source:       ReactableTypeSource.isRequired,

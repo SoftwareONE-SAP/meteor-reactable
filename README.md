@@ -89,9 +89,15 @@ var config = {
 }
 ```
 
+The class "reactable" is always included
+
 ### config.tableClasses [String | Array | Function]
 
-Exactly the same as `config.classes` except it applies to the `<table/>` tag.
+The same as `config.classes` except without the default "reactable" class, and it applies to the `<table/>` tag instead.
+
+### config.id [String]
+
+Optional item for adding an "id" attribute to the root DOM element.
 
 ### config.source [Object]
 

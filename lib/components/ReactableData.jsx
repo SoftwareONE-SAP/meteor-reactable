@@ -38,6 +38,7 @@ ReactableData = React.createClass({
   render () {
     return (
       <ReactableUI
+        id           = { this.props.id           }
         classes      = { this.props.classes      }
         tableClasses = { this.props.tableClasses }
         fields       = { this.props.fields       }
