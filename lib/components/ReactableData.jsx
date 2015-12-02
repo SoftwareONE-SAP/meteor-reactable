@@ -38,10 +38,11 @@ ReactableData = React.createClass({
   render () {
     return (
       <ReactableUI
-        tableClasses = { this.props.classes  }
-        fields       = { this.props.fields   }
-        rows         = { this.data.rows      }
-        ready        = { this.data.ready     }
+        classes      = { this.props.classes      }
+        tableClasses = { this.props.tableClasses }
+        fields       = { this.props.fields       }
+        rows         = { this.data.rows          }
+        ready        = { this.data.ready         }
       />
     );
   },

@@ -7,6 +7,7 @@ const T = React.PropTypes;
 Reactable = React.createClass({
 
   propTypes: {
+    classes:      ReactableTypeClasses,
     tableClasses: ReactableTypeClasses,
     source:       ReactableTypeSource.isRequired,
     fields:       T.arrayOf(ReactableTypeField).isRequired,
@@ -14,6 +15,7 @@ Reactable = React.createClass({
 
   getDefaultProps () {
     return {
+      classes:      '',
       tableClasses: '',
     };
   },
