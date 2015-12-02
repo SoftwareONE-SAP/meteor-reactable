@@ -37,14 +37,36 @@ Reactable = React.createClass({
     let props = { ...this.props };
     delete props.children;
     props.fields = props.fields.map(field => {
+
+      if (typeof field.sort === 'number') {
+        field.sort = { direction: field.sort };
+      }
+
       return Reactable.applyFieldDefaults(field);
     });
 
     props.sort = this.state.sort;
 
+    props.onHeadCellClick = this.onHeadCellClick;
+
     return (
       <ReactableData { ...props }/>
     );
+  },
+
+  onHeadCellClick (field) {
+    const name = field.name;
+
+    let sort_spec = field.sort;
+    let sort      = this.state.sort || {};
+
+    if (sort.name === name) {
+      sort.direction *= -1;
+    } else {
+      sort.name      = name;
+      sort.direction = sort_spec.direction || 1;
+    }
+    this.setState({ sort });
   },
 
   getInitialSortState () {

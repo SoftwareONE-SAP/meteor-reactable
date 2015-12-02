@@ -1,10 +1,11 @@
 ReactableTableHeadCell = React.createClass({
 
   propTypes: {
-    name:    React.PropTypes.string,
-    label:   React.PropTypes.string,
-    classes: ReactableTypeClasses,
-    thInner: React.PropTypes.func, // React class
+    name:     React.PropTypes.string,
+    label:    React.PropTypes.string,
+    classes:  ReactableTypeClasses,
+    thInner:  React.PropTypes.func, // React class
+    onClick:  React.PropTypes.func,
   },
 
   getDefaultProps () {
@@ -32,10 +33,16 @@ ReactableTableHeadCell = React.createClass({
     }
 
     return (
-      <th className={ this.getClasses() }>
+      <th className={ this.getClasses() } onClick={ this.onClick }>
         { inner }
       </th>
     );
+  },
+
+  onClick (e) {
+    if (this.props.onClick) {
+      this.props.onClick(e, this.props);
+    }
   },
 
   getClasses () {

@@ -1,12 +1,13 @@
 ReactableTable = React.createClass({
 
   propTypes: {
-    classes:   React.PropTypes.string.isRequired,
-    addTbody:  React.PropTypes.bool.isRequired,
-    tr:        React.PropTypes.func, // React class
-    trClasses: ReactableTypeClasses.isRequired,
-    fields:    React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    rows:      React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    classes:         React.PropTypes.string.isRequired,
+    addTbody:        React.PropTypes.bool.isRequired,
+    tr:              React.PropTypes.func, // React class
+    trClasses:       ReactableTypeClasses.isRequired,
+    fields:          React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    rows:            React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    onHeadCellClick: React.PropTypes.func,
   },
 
   render () {
@@ -31,7 +32,10 @@ ReactableTable = React.createClass({
 
     return (
       <table className={ this.props.classes }>
-        <ReactableTableHead fields={ this.props.fields }/>
+        <ReactableTableHead
+          fields      = { this.props.fields    }
+          onCellClick = { this.props.onHeadCellClick }
+        />
         { rows }
       </table>
     );

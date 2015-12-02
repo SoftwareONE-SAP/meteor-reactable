@@ -1,7 +1,8 @@
 ReactableTableHead = React.createClass({
 
   propTypes: {
-    fields: React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    fields:      React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    onCellClick: React.PropTypes.func,
   },
 
   render () {
@@ -13,6 +14,7 @@ ReactableTableHead = React.createClass({
           label   = { field.label     }
           classes = { field.thClasses }
           thInner = { field.thInner   }
+          onClick = { () => this.onCellClick(field) }
         />
       );
     });
@@ -22,5 +24,11 @@ ReactableTableHead = React.createClass({
         { React.createElement('tr', {}, ...cells) }
       </thead>
     );
+  },
+
+  onCellClick (field) {
+    if (this.props.onCellClick) {
+      this.props.onCellClick(field);
+    }
   }
 });
