@@ -12,6 +12,7 @@ ReactableTypeField = T.shape({
   label:     T.string,
   transform: T.func,
   td:        T.func, // React class
+  tdInner:   T.func, // React class
   thInner:   T.func, // React class
   tdClasses: ReactableTypeClasses,
   thClasses: ReactableTypeClasses,

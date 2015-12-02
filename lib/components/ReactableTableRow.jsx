@@ -41,6 +41,15 @@ ReactableTableRow = React.createClass({
 
       const TableCell = field.hasOwnProperty('td') ? field.td : ReactableTableCell;
 
+      if (field.hasOwnProperty('tdInner')) {
+        const Inner = field.tdInner;
+        value = (
+          <Inner row={ this.props.data }>
+            { value }
+          </Inner>
+        );
+      }
+
       return (
         <TableCell classes={ classes } row={ this.props.data }>
           { value }

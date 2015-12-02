@@ -25,8 +25,7 @@ ReactableTableHeadCell = React.createClass({
         <Component
           name  = { this.props.name }
           label = { this.props.label }
-          title = { title }
-        />
+        >{ title }</Component>
       );
     } else {
       inner = title;
