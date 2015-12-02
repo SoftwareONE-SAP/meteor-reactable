@@ -10,6 +10,7 @@ Reactable = React.createClass({
     id:           T.string,
     classes:      ReactableTypeClasses,
     tableClasses: ReactableTypeClasses,
+    trClasses:    ReactableTypeClasses,
     tr:           React.PropTypes.func, // React class
     addTbody:     React.PropTypes.bool,
     source:       ReactableTypeSource.isRequired,
@@ -20,6 +21,7 @@ Reactable = React.createClass({
     return {
       classes:      '',
       tableClasses: '',
+      trClasses:    '',
       addTbody:     true,
     };
   },

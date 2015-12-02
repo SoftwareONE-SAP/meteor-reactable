@@ -1,19 +1,21 @@
 const DefaultRow = React.createClass({
   render () {
     return (
-      <tr>
+      <tr className={ this.props.classes }>
         { this.props.children }
       </tr>
     );
-  }
+  },
 });
 
 ReactableTableRow = React.createClass({
 
   propTypes: {
-    tr:     React.PropTypes.func, // React class
-    fields: React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    data:   React.PropTypes.object.isRequired,
+    classes: ReactableTypeClasses.isRequired,
+    tr:      React.PropTypes.func, // React class
+    fields:  React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    data:    React.PropTypes.object.isRequired,
+    count:   React.PropTypes.number.isRequired,
   },
 
   render () {
@@ -70,9 +72,24 @@ ReactableTableRow = React.createClass({
 
     const Row = this.props.tr || DefaultRow;
     return React.createElement(Row, {
-      fields: this.props.fields,
-      data:   this.props.data,
+      classes: this.getClasses(),
+      fields:  this.props.fields,
+      data:    this.props.data,
+      count:   this.props.count,
     }, ...cells);
-  }
+  },
+
+  getClasses () {
+    let classes = this.props.classes;
+    if (typeof classes === 'function') {
+      classes = classes.call(this, this.props.count);
+    }
+    if (Array.isArray(classes)) {
+      classes = classes.filter(c => {
+        return typeof c === 'string' && c.length;
+      }).join(' ');
+    }
+    return classes;
+  },
 
 });

@@ -97,6 +97,10 @@ The class "reactable" is always included
 
 The same as `config.classes` except without the default "reactable" class, and it applies to the `<table/>` tag instead. Has access to the same props as runs under the same context.
 
+### `config.trClasses` [ `String` | `Array` | `Function` ]
+
+The same as `config.tableClasses` except it applies to the `<tr/>` tag instead. When running as a `Function` has access to `props.fields` and `props.data`. Also is passed the row number as first argument, starting at 1.
+
 ### `config.id` [ `String` ]
 
 Optional item for adding an `id` attribute to the root DOM element.
@@ -383,7 +387,7 @@ The default React class for a `<tr/>` is:
 React.createClass({
   render: function () {
     return (
-      <tr>
+      <tr className={ this.props.classes }>
         { this.props.children }
       </tr>
     )
