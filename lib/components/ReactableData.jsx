@@ -36,16 +36,15 @@ ReactableData = React.createClass({
   },
 
   render () {
-    return (
-      <ReactableUI
-        id           = { this.props.id           }
-        classes      = { this.props.classes      }
-        tableClasses = { this.props.tableClasses }
-        fields       = { this.props.fields       }
-        rows         = { this.data.rows          }
-        ready        = { this.data.ready         }
-      />
-    );
+
+    // Pass-through all props and reactive data as props, except for
+    // props.source which is not needed outside of this component.
+    let props = { ...this.props };
+    delete props.children;
+    delete props.source;
+    Object.keys(this.data).forEach(k => props[ k ] = this.data[ k ]);
+
+    return <ReactableUI {...props}/>;
   },
 
   /**

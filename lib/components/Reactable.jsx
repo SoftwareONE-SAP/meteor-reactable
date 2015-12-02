@@ -10,6 +10,8 @@ Reactable = React.createClass({
     id:           T.string,
     classes:      ReactableTypeClasses,
     tableClasses: ReactableTypeClasses,
+    tr:           React.PropTypes.func, // React class
+    addTbody:     React.PropTypes.bool,
     source:       ReactableTypeSource.isRequired,
     fields:       T.arrayOf(ReactableTypeField).isRequired,
   },
@@ -18,6 +20,7 @@ Reactable = React.createClass({
     return {
       classes:      '',
       tableClasses: '',
+      addTbody:     true,
     };
   },
 
@@ -30,9 +33,7 @@ Reactable = React.createClass({
     });
 
     return (
-      <ReactableData { ...props }>
-        { this.props.children }
-      </ReactableData>
+      <ReactableData { ...props }/>
     );
   },
 

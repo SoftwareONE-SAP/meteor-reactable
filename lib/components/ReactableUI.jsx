@@ -4,6 +4,8 @@ ReactableUI = React.createClass({
     id:           React.PropTypes.string,
     classes:      ReactableTypeClasses.isRequired,
     tableClasses: ReactableTypeClasses.isRequired,
+    addTbody:     React.PropTypes.bool.isRequired,
+    tr:           React.PropTypes.func, // React class
     fields:       React.PropTypes.arrayOf(ReactableTypeField).isRequired,
     rows:         React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     ready:        React.PropTypes.bool.isRequired,
@@ -13,9 +15,11 @@ ReactableUI = React.createClass({
     return (
       <div id={ this.props.id } className={ this.getClasses(this.props.classes) }>
         <ReactableTable
-          classes = { this.getClasses(this.props.tableClasses) }
-          fields  = { this.props.fields       }
-          rows    = { this.props.rows         }
+          classes  = { this.getClasses(this.props.tableClasses) }
+          tr       = { this.props.tr           }
+          addTbody = { this.props.addTbody     }
+          fields   = { this.props.fields       }
+          rows     = { this.props.rows         }
         />
       </div>
     )

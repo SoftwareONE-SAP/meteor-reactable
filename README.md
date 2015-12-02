@@ -356,6 +356,54 @@ var config = {
 }
 ```
 
+### config.tr [React class]
+
+The default React class for a `<tr/>` is:
+
+```javascript
+React.createClass({
+  render: function () {
+    return (
+      <tr>
+        { this.props.children }
+      </tr>
+    )
+  }
+});
+```
+
+Where `props.children` is a list of table cells `<td/>`'s.
+If you want to override it, set `config.tr` to be your replacement React class. Other props available to this class are `props.data` which contains all of the data for the row in an object keyed on name, and also `props.fields` which contains an array of field definitions for the table.
+
+There may be cases where you want to return multiple `<tr/>`'s for a single row. Because of the way React works with only a single element at the root of each class, you need to wrap them in a `tbody`:
+
+```javascript
+config = {
+  tr: React.createClass({
+    render: function () {
+      return (
+        <tbody>
+          <tr>{ this.props.children }</tr>
+          <tr>
+            <td colSpan={ this.props.fields.length }>
+              Although I included your first name in the above row, I decided
+              to include it in this row too with a bunch of text for some
+              reason: { this.props.data.first_name }
+            </td>
+          </tr>
+        </tbody>
+      )
+    }
+  })
+}
+```
+
+Yes, it is perfectly valid to have multiple `<tbody/>`'s in a single table. Unfortunately, we already wrap the list of rows in a tbody one level higher, and you can't have tbody's inside tbody's. The fix for this is to turn off the wrapper tbody by setting `config.addTbody` to `false`.
+
+### config.addTbody [Boolean]
+
+As described in `config.tr`, all table rows are wrapped in a `<tbody/>` by default. If you want to remove this, set `config.addTbody` to `false`. The main reason you would use this is if you're overriding the default `<tr/>` component using `config.tr` and returning a `<tbody/>` rather than a `<tr/>`.
+
 ## Global Configuration
 
 #### Reactable.setFieldDefaults [Function]

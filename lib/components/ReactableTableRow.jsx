@@ -1,6 +1,17 @@
+const DefaultRow = React.createClass({
+  render () {
+    return (
+      <tr>
+        { this.props.children }
+      </tr>
+    );
+  }
+});
+
 ReactableTableRow = React.createClass({
 
   propTypes: {
+    tr:     React.PropTypes.func, // React class
     fields: React.PropTypes.arrayOf(ReactableTypeField).isRequired,
     data:   React.PropTypes.object.isRequired,
   },
@@ -57,7 +68,11 @@ ReactableTableRow = React.createClass({
       );
     });
 
-    return React.createElement('tr', {}, ...cells);
+    const Row = this.props.tr || DefaultRow;
+    return React.createElement(Row, {
+      fields: this.props.fields,
+      data:   this.props.data,
+    }, ...cells);
   }
 
 });
