@@ -187,8 +187,6 @@ ReactableData = React.createClass({
       options.skip  = limit * ( page - 1 );
     }
 
-    console.log(options);
-
     return options;
   },
 
