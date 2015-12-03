@@ -2,7 +2,7 @@ ReactableTableCell = React.createClass({
 
   propTypes: {
     row:     React.PropTypes.object.isRequired,
-    classes: React.PropTypes.string.isRequired,
+    classes: React.PropTypes.string,
   },
 
   render () {

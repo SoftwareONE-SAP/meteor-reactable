@@ -9,7 +9,8 @@ ReactableClasses = {
    * Gives you: "1 foo 2 bar"
    */
   getClasses () {
-    return flattenClasses.apply(this, arguments);
+    const classes = flattenClasses.apply(this, arguments);
+    return classes.length ? classes : null;
   },
 
 };

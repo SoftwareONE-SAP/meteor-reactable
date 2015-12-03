@@ -22,9 +22,9 @@ ReactableUI = React.createClass({
     let props = { ...this.props };
     delete props.children;
     delete props.id;
-    delete props.tableClasses;
     delete props.navigation;
-    props.classes = this.getClasses([this.props.tableClasses]);
+    props.classes = props.tableClasses;
+    delete props.tableClasses;
     return props;
   },
 

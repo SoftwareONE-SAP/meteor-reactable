@@ -26,36 +26,16 @@ Reactable = React.createClass({
   },
 
   getInitialState () {
-
     let state = {
       sort: this.getInitialSortState(),
     };
 
-    // Pagination state
-    if (this.props.paginate) {
-      state.paginate = {};
-      if (typeof this.props.paginate === 'number') {
-        state.paginate.page  = 1;
-        state.paginate.limit = this.props.paginate;
-      } else {
-        state.paginate.page  = this.props.paginate.defaultPage || 1;
-        state.paginate.limit = this.props.paginate.defaultLimit;
-        if (this.props.paginate.ui) {
-          state.paginate.ui = this.props.paginate.ui;
-        }
-      }
+    let paginate = this.getInitialPaginationState();
+    if (paginate) {
+      state.paginate = paginate;
     }
 
     return state;
-  },
-
-  getDefaultProps () {
-    return {
-      classes:      '',
-      tableClasses: '',
-      trClasses:    '',
-      addTbody:     true,
-    };
   },
 
   render () {
@@ -123,7 +103,7 @@ Reactable = React.createClass({
     let sort = null;
 
     this.props.fields.some(field => {
-      if (!field.hasOwnProperty('name'))     return false;
+      if (!field.hasOwnProperty('name'))  return false;
       if (typeof field.sort !== 'object') return false;
       if (!field.sort.default)            return false;
       sort = {
@@ -134,6 +114,24 @@ Reactable = React.createClass({
     });
 
     return sort;
+  },
+
+  getInitialPaginationState () {
+    let state = null;
+    if (this.props.paginate) {
+      state = {};
+      if (typeof this.props.paginate === 'number') {
+        state.page  = 1;
+        state.limit = this.props.paginate;
+      } else {
+        state.page  = this.props.paginate.defaultPage || 1;
+        state.limit = this.props.paginate.defaultLimit;
+        if (this.props.paginate.ui) {
+          state.ui = this.props.paginate.ui;
+        }
+      }
+    }
+    return state;
   },
 
   statics: () => {
