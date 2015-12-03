@@ -7,20 +7,46 @@ const T = React.PropTypes;
 Reactable = React.createClass({
 
   propTypes: {
-    id:           T.string,
-    classes:      ReactableTypeClasses,
-    tableClasses: ReactableTypeClasses,
-    trClasses:    ReactableTypeClasses,
-    tr:           React.PropTypes.func, // React class
-    addTbody:     React.PropTypes.bool,
-    source:       ReactableTypeSource.isRequired,
-    fields:       T.arrayOf(ReactableTypeField).isRequired,
+    id:             T.string,
+    classes:        ReactableTypeClasses,
+    tableClasses:   ReactableTypeClasses,
+    trClasses:      ReactableTypeClasses,
+    tr:             T.func, // React class
+    addTbody:       T.bool,
+    source:         ReactableTypeSource.isRequired,
+    fields:         T.arrayOf(ReactableTypeField).isRequired,
+    paginate:       T.oneOfType([
+      T.number,
+      T.shape({
+        ui:           T.func, // React classes
+        defaultPage:  T.number,
+        defaultLimit: T.number.isRequired,
+      }),
+    ]),
   },
 
   getInitialState () {
-    return {
+
+    let state = {
       sort: this.getInitialSortState(),
     };
+
+    // Pagination state
+    if (this.props.paginate) {
+      state.paginate = {};
+      if (typeof this.props.paginate === 'number') {
+        state.paginate.page  = 1;
+        state.paginate.limit = this.props.paginate;
+      } else {
+        state.paginate.page  = this.props.paginate.defaultPage || 1;
+        state.paginate.limit = this.props.paginate.defaultLimit;
+        if (this.props.paginate.ui) {
+          state.paginate.ui = this.props.paginate.ui;
+        }
+      }
+    }
+
+    return state;
   },
 
   getDefaultProps () {
@@ -36,24 +62,46 @@ Reactable = React.createClass({
 
     let props = { ...this.props };
     delete props.children;
+
+    // Field sorting fixups
     props.fields = props.fields.map(origField => {
-
       let field = { ...origField };
-
       if (typeof field.sort === 'number') {
         field.sort = { direction: field.sort };
       }
-
       return Reactable.applyFieldDefaults(field);
     });
-
     props.sort = this.state.sort;
+
+    if (this.state.paginate) {
+      props.paginate      = this.state.paginate;
+      props.onChangePage  = this.onChangePage;
+      props.onChangeLimit = this.onChangeLimit;
+    }
 
     props.onHeadCellClick = this.onHeadCellClick;
 
     return (
       <ReactableData { ...props }/>
     );
+  },
+
+  onChangePage (num) {
+    num = parseInt(num);
+    if (isNaN(num) || num < 1) num = 1;
+
+    let paginate = { ...this.state.paginate };
+    paginate.page = num;
+    this.setState({ paginate });
+  },
+
+  onChangeLimit (num) {
+    num = parseInt(num);
+    if (isNaN(num) || num < 1) num = 1;
+
+    let paginate = { ...this.state.paginate };
+    paginate.limit = num;
+    this.setState({ paginate });
   },
 
   onHeadCellClick (field) {

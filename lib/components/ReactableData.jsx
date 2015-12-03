@@ -28,6 +28,7 @@ ReactableData = React.createClass({
         });
       }(0);
 
+      // Apply sorting
       if (this.props.sort) {
         const name = this.props.sort.name;
         data.rows = data.rows.sort((a,b) => a[ name ] > b[ name ]);
@@ -35,9 +36,33 @@ ReactableData = React.createClass({
           data.rows = data.rows.reverse();
         }
       }
+
+      data.totalRows = data.rows.length;
+
+      // Apply pagination
+      if (this.props.paginate) {
+        let { limit, page } = this.props.paginate;
+
+        const maxPage = this.maxPage(limit, data.totalRows);
+        if (page > maxPage) page = maxPage;
+
+        const startRow = limit * ( page - 1 );
+        const endRow   = limit * page;
+        let rows = [];
+        for (let i = startRow; i < endRow && i < data.totalRows; ++i) {
+          rows.push(data.rows[i]);
+        }
+        data.rows = rows;
+      }
+
     } else {
       data.ready = this.subscribe().ready();
-      data.rows  = collection.find(this.selector(), this.options()).fetch();
+      if (this.props.paginate) {
+        data.totalRows = collection.find(this.selector()).count();
+      }
+      data.rows  = collection.find(this.selector(), this.options({
+        totalRows: data.totalRows
+      })).fetch();
     }
 
     return data;
@@ -51,6 +76,24 @@ ReactableData = React.createClass({
     delete props.children;
     delete props.source;
     Object.keys(this.data).forEach(k => props[ k ] = this.data[ k ]);
+
+    // Pagination
+    if (props.hasOwnProperty('totalRows')) {
+      let paginate = { ...props.paginate };
+      paginate.totalRows = props.totalRows;
+      delete props.totalRows;
+
+      if (paginate.totalRows === 0) {
+        paginate.pages = 1;
+      } else {
+        paginate.pages = this.maxPage(paginate.limit, paginate.totalRows);
+      }
+      if (paginate.page > paginate.pages) {
+        paginate.page = paginate.pages;
+      }
+      paginate.hasMore = paginate.pages > paginate.page;
+      props.paginate   = paginate;
+    }
 
     return <ReactableUI {...props}/>;
   },
@@ -109,6 +152,7 @@ ReactableData = React.createClass({
   /**
    * Returns selector to be used in the Mongo query
    */
+
   selector () {
     let selector = this.props.source.selector;
     if (typeof selector === 'function') {
@@ -120,7 +164,7 @@ ReactableData = React.createClass({
   /**
    * Returns options to be used in the Mongo query
    */
-  options () {
+  options ({ totalRows }) {
     let options = {
       fields: this.fields(),
     };
@@ -129,6 +173,18 @@ ReactableData = React.createClass({
       let sort = {};
       sort[ this.props.sort.name ] = this.props.sort.direction;
       options.sort = sort;
+    }
+
+    if (this.props.paginate) {
+      let { limit, page } = this.props.paginate;
+
+      if (typeof totalRows !== 'undefined') {
+        const maxPage = this.maxPage(limit, totalRows);
+        if (page > maxPage) page = maxPage;
+      }
+
+      options.limit = limit;
+      options.skip  = limit * ( page - 1 );
     }
 
     return options;
@@ -143,5 +199,12 @@ ReactableData = React.createClass({
       this.props.source.fields.forEach(field => fields[ field ] = 1);
     }
     return fields;
-  }
+  },
+
+  maxPage (limit, totalRows) {
+    let pages     = totalRows / limit;
+    let realPages = parseInt(pages);
+    if (realPages < pages) ++realPages;
+    return realPages;
+  },
 });

@@ -32,6 +32,7 @@ Package.onUse(function(api) {
     'lib/components/ReactableTableHeadCell.jsx',
     'lib/components/ReactableTableRow.jsx',
     'lib/components/ReactableTableCell.jsx',
+    'lib/components/ReactableNavigation.jsx',
   ], 'client');
 
   api.export('Reactable');

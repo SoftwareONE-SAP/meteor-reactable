@@ -387,7 +387,7 @@ var config = {
 If `field.sort` exists, then the table considers that a sortable column. Sort direction is either 1 for ascending or -1 for descending to match MongoDB's sort options. When `field.sort` is specified as a number it is just a short cut for the more powerful `Object` notation. These two are the same:
 
 ```javascript
-config = {
+var config = {
   fields: [
     {
       sort: -1, // or:
@@ -400,7 +400,7 @@ config = {
 When using Object notation, if you add a `default: true`, then table data will be sorted using this column by default:
 
 ```javascript
-config = {
+var config = {
   fields: [
     sort: {
       direction: 1,
@@ -435,7 +435,7 @@ Where `props.children` is a list of table cells `<td/>`. If you want to override
 There may be cases where you want to return multiple `<tr/>` for a single row. Because of the way React works with only a single element at the root of each component class, you need to wrap them in a `<tbody/>`:
 
 ```javascript
-config = {
+var config = {
   tr: React.createClass({
     render: function () {
       return (
@@ -460,6 +460,65 @@ Yes, it is perfectly valid to have multiple `<tbody/>` in a single table. Unfort
 ### `config.addTbody` [ `Boolean` ]
 
 As described in `config.tr`, all table rows are wrapped in a `<tbody/>` by default. If you want to remove this, set `config.addTbody` to `false`. The main reason you would use this is if you're overriding the default `<tr/>` component using `config.tr` and returning a `<tbody/>` rather than a `<tr/>`.
+
+### `config.paginate` [ `Object` | `Number` ]
+
+You can add pagination to your table as simply as:
+
+```javascript
+var config = {
+  paginate: 10,
+}
+```
+
+This will make it so that a maximum of 10 results are displayed in the table. It also adds a simple form to the bottom of the table where people can skip forward/backwards and change the limit.
+
+The above style is actually a shortcut for a more powerful style which works like this:
+
+```javascript
+var config = {
+  paginate: {
+    defaultLimit: 10,
+  }
+}
+```
+
+As well as the required `paginate.defaultLimit`, there is also an optional `paginate.defaultPage` if you don't want the table to start at page 1. To override the UI which is added to the bottom of the table, with your own component, set `paginate.ui`. For example:
+
+```javascript
+var config = {
+  paginate: {
+    ui: React.createClass({
+      render: function () {
+        return (
+          <div>Your replacement form</div>
+        );
+      }
+    })
+  }
+}
+```
+
+Inside your custom component you have access to many different `props`:
+
+1. `props.totalRows`
+    The total number of rows (if known)
+2. `props.pages`
+    The total number of pages (if known)
+3. `props.limit`
+    The current value for the total number of items per page
+4. `props.page`
+    The current page number
+5. `props.hasMore`
+    Whether or not there are more pages after the current one
+6. `props.changeLimit`
+    A function which you call with the new limit when you want to change it
+7. `props.changePage`
+    A function which you call with the new page when you want to change it
+8. `props.nextPage`
+    A function which you call when you want to skip to the next page of results
+9. `props.prevPage`
+    A function which you call when you want to skip to the previous page of results.
 
 ## Global Configuration
 
