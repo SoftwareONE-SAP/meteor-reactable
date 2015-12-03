@@ -36,7 +36,9 @@ Reactable = React.createClass({
 
     let props = { ...this.props };
     delete props.children;
-    props.fields = props.fields.map(field => {
+    props.fields = props.fields.map(origField => {
+
+      let field = { ...origField };
 
       if (typeof field.sort === 'number') {
         field.sort = { direction: field.sort };
