@@ -26,7 +26,26 @@ ReactableTableRow = React.createClass({
       let value;
 
       if (field.hasOwnProperty('name')) {
-        value = this.props.data[ field.name ];
+
+        let name = field.name;
+        let data = this.props.data;
+
+        while (true) {
+          const i = name.indexOf('.');
+          if (i === -1) break;
+          const a = name.substr(0, i);
+          const b = name.substr(i + 1);
+          if (data.hasOwnProperty(a) && typeof data[ a ] === 'object') {
+            data = data[ a ];
+            name = b;
+          } else {
+            value = null;
+          }
+        }
+
+        if (typeof value === 'undefined') {
+          value = data[ name ];
+        }
       }
 
       let classes = this.getClasses([field.tdClasses], value);

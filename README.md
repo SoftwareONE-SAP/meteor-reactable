@@ -36,7 +36,10 @@ people.insert({
 people.insert({
   forename: 'Jean-Luc',
   surname:  'Picard',
-  rating:   9
+  rating:   9,
+  private: {
+    password: 'secret'
+  }
 });
 ```
 
@@ -58,6 +61,9 @@ var config = {
     },
     {
       name: 'rating',
+    },
+    {
+      name: 'private.password',
     }
   ],
 };
@@ -65,10 +71,10 @@ var config = {
 
 Assuming a suitable subscription was in place to populate the `people` collection, the following reactive table would be produced:
 
-First Name | Last Name | Rating
------------|-----------|-------
-Mike       | Cardwell  | 10
-Jean-Luc   | Picard    | 9
+First Name | Last Name | Rating | Private Password
+-----------|-----------|--------|-----------------
+Mike       | Cardwell  | 10     |
+Jean-Luc   | Picard    | 9      | secret
 
 ## Configuration
 
@@ -236,7 +242,8 @@ Would create the following table:
   <thead>
     <tr>
       <th>First Name</th>
-      <th>Last name</th>
+      <th>Last Name</th>
+      <th>Secret Password</th>
     </tr>
   </thead>
 </table>
@@ -244,18 +251,19 @@ Would create the following table:
 
 #### 2. `field.name` [ `String` ]
 
-This is an optional `String` that contains the name of a key in MongoDB from which we want to retrieve the value to display in the table body. If `field.label` isn't supplied, then the table column header is derived from this value instead, replacing underscores with spaces and capitalizing the first letter of each word. So the following definition would create the exact same table as above:
+This is an optional `String` that contains the name of a key in MongoDB from which we want to retrieve the value to display in the table body. If `field.label` isn't supplied, then the table column header is derived from this value instead, replacing underscores and full stops with spaces and capitalizing the first letter of each word. So the following definition would create the exact same table as above:
 
 ```javascript
 var config = {
   fields: [
     { name: "first_name" },
-    { name: "last_name"  }
+    { name: "last_name"  },
+    { name: "secret.password" }
   ]
 }
 ```
 
-Without a `field.name`, the column will be empty. Unless you override the contents of the column cells by using `field.td` or `field.tdInner`
+Without a `field.name`, the column will be empty. Unless you override the contents of the column cells by using `field.td`, `field.tdInner` or `field.transform`
 
 #### 3. `field.transform` [ `Function` ]
 

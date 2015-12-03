@@ -52,7 +52,7 @@ ReactableTableHeadCell = React.createClass({
     if (this.props.label.length) {
       title = this.props.label;
     } else if (this.props.name.length) {
-      title = this.props.name.split('_').map(word => {
+      title = this.props.name.split(/[_.]/).map(word => {
         return word.charAt(0).toUpperCase() + word.slice(1);
       }).join(' ');
     }
