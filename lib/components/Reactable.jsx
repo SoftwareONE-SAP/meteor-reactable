@@ -16,12 +16,20 @@ Reactable = React.createClass({
     // Field sorting fixups
     props.fields = props.fields.map(origField => {
       let field = { ...origField };
+
+      // Convert "sort" format from simple to advanced
       if (typeof field.sort === 'number') {
         field.sort = { direction: field.sort };
       }
       return Reactable.applyFieldDefaults(field);
     });
 
+    // Convert "paginate" format from simple to advanced
+    if (typeof props.paginate === 'number') {
+      props.paginate = {
+        defaultLimit: props.paginate,
+      };
+    }
 
     return (
       <ReactableState { ...props }/>

@@ -51,16 +51,12 @@ ReactableState = React.createClass({
   getInitialPaginationState () {
     let state = null;
     if (this.props.paginate) {
-      state = {};
-      if (typeof this.props.paginate === 'number') {
-        state.page  = 1;
-        state.limit = this.props.paginate;
-      } else {
-        state.page  = this.props.paginate.defaultPage || 1;
-        state.limit = this.props.paginate.defaultLimit;
-        if (this.props.paginate.ui) {
-          state.ui = this.props.paginate.ui;
-        }
+      state = {
+        page:  this.props.paginate.defaultPage || 1,
+        limit: this.props.paginate.defaultLimit,
+      };
+      if (this.props.paginate.ui) {
+        state.ui = this.props.paginate.ui;
       }
     }
     return state;
