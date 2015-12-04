@@ -33,11 +33,10 @@ ReactableTableRow = React.createClass({
         while (true) {
           const i = name.indexOf('.');
           if (i === -1) break;
-          const a = name.substr(0, i);
-          const b = name.substr(i + 1);
-          if (data.hasOwnProperty(a) && typeof data[ a ] === 'object') {
-            data = data[ a ];
-            name = b;
+          const head = name.substr(0, i);
+          name = name.substr(i + 1);
+          if (data.hasOwnProperty(head) && typeof data[ head ] === 'object') {
+            data = data[ head ];
           } else {
             value = null;
           }

@@ -10,72 +10,82 @@ ReactableData = React.createClass({
     const source     = this.props.source;
     const collection = source.collection;
 
-    let data = {
-      ready: null,
-      rows:  null,
-    };
+    let data = {};
 
-    if (Array.isArray(collection)) {
-      data.ready = true;
-      data.rows = (id) => {
-        const fields = this.fields();
-        return collection.map(doc => {
-          Object.keys(doc).forEach(k => {
-            if (!fields.hasOwnProperty(k)) delete doc[ k ];
-          });
-          if (!doc.hasOwnProperty('_id')) doc._id = ++id;
-          return doc;
-        });
-      }(0);
-
-      // Apply sorting
-      if (this.props.sort) {
-        const name = this.props.sort.name;
-        data.rows = data.rows.sort((a,b) => a[ name ] > b[ name ]);
-        if (this.props.sort.direction < 0) {
-          data.rows = data.rows.reverse();
-        }
-      }
-
-      data.totalRows = data.rows.length;
-
-      // Apply pagination
-      if (this.props.paginate) {
-        let { limit, page } = this.props.paginate;
-
-        const maxPage = this.maxPage(limit, data.totalRows);
-        if (page > maxPage) page = maxPage;
-
-        const startRow = limit * ( page - 1 );
-        const endRow   = limit * page;
-        let rows = [];
-        for (let i = startRow; i < endRow && i < data.totalRows; ++i) {
-          rows.push(data.rows[i]);
-        }
-        data.rows = rows;
-      }
-
-    } else {
+    if (this.isReactive()) {
       data.ready = this.subscribe().ready();
+
+      const selector = this.selector();
+      const options  = this.options(data);
+
       if (this.props.paginate) {
-        data.totalRows = collection.find(this.selector()).count();
+        data.totalRows = collection.find(selector).count();
       }
-      data.rows  = collection.find(this.selector(), this.options({
-        totalRows: data.totalRows
-      })).fetch();
+
+      data.rows = collection.find(selector, options).fetch();
     }
 
     return data;
   },
 
+  getData () {
+    const source     = this.props.source;
+    const collection = source.collection;
+
+    if (this.isReactive()) {
+      return this.data;
+    }
+
+    let data = {
+      ready: true,
+    };
+
+    // Add fake _id's if they don't already exist
+    data.rows = id => {
+      return collection.map(doc => {
+        if (!doc.hasOwnProperty('_id')) doc._id = ++id;
+        return doc;
+      });
+    }(0);
+
+    // Apply sorting
+    if (this.props.sort) {
+      const name = this.props.sort.name;
+      data.rows = data.rows.sort((a,b) => a[ name ] > b[ name ]);
+      if (this.props.sort.direction < 0) {
+        data.rows = data.rows.reverse();
+      }
+    }
+
+    data.totalRows = data.rows.length;
+
+    // Apply pagination
+    if (this.props.paginate) {
+      let { limit, page } = this.props.paginate;
+
+      const maxPage = this.maxPage(limit, data.totalRows);
+      if (page > maxPage) page = maxPage;
+
+      const startRow = limit * ( page - 1 );
+      const endRow   = limit * page;
+      let rows = [];
+      for (let i = startRow; i < endRow && i < data.totalRows; ++i) {
+        rows.push(data.rows[i]);
+      }
+      data.rows = rows;
+    }
+    return data;
+  },
+
   render () {
+    const data = this.getData();
 
     // Pass-through all props and reactive data as props, except for
     // props.source which is not needed outside of this component.
     let props = { ...this.props };
     delete props.children;
     delete props.source;
-    Object.keys(this.data).forEach(k => props[ k ] = this.data[ k ]);
+    Object.keys(data).forEach(k => props[ k ] = data[ k ]);
 
     // Pagination
     if (props.hasOwnProperty('totalRows')) {
@@ -207,4 +217,9 @@ ReactableData = React.createClass({
     if (realPages < pages) ++realPages;
     return realPages;
   },
+
+  isReactive () {
+    return !Array.isArray(this.props.source.collection);
+  },
+
 });
