@@ -25,6 +25,7 @@ Package.onUse(function(api) {
     'lib/PropTypes.jsx',
     'lib/mixins/ReactableClasses.jsx',
     'lib/components/Reactable.jsx',
+    'lib/components/ReactableState.jsx',
     'lib/components/ReactableData.jsx',
     'lib/components/ReactableUI.jsx',
     'lib/components/ReactableTable.jsx',

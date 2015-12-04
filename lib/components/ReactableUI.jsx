@@ -8,7 +8,7 @@ ReactableUI = React.createClass({
 
     return (
       <div id={ this.props.id } className={ classes }>
-        <ReactableTable      { ...this.tableProps() }/>
+        <ReactableTable { ...this.tableProps() }/>
         {
           this.props.paginate ? (
             <ReactableNavigation { ...this.navigationProps() }/>
