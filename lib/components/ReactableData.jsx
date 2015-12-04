@@ -12,7 +12,7 @@ ReactableData = React.createClass({
 
     let data = {};
 
-    if (this.isReactive()) {
+    if (this.props.isReactive) {
       data.ready = this.subscribe().ready();
 
       const selector = this.selector();
@@ -33,7 +33,7 @@ ReactableData = React.createClass({
     const source     = this.props.source;
     const collection = source.collection;
 
-    if (this.isReactive()) {
+    if (this.props.isReactive) {
       return this.data;
     }
 
@@ -217,10 +217,6 @@ ReactableData = React.createClass({
     let realPages = parseInt(pages);
     if (realPages < pages) ++realPages;
     return realPages;
-  },
-
-  isReactive () {
-    return !Array.isArray(this.props.source.collection);
   },
 
 });

@@ -11,6 +11,8 @@ Reactable = React.createClass({
     let props = { ...this.props };
     delete props.children;
 
+    props.isReactive = !Array.isArray(props.source.collection);
+
     // Field sorting fixups
     props.fields = props.fields.map(origField => {
       let field = { ...origField };
