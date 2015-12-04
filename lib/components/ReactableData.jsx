@@ -16,11 +16,12 @@ ReactableData = React.createClass({
       data.ready = this.subscribe().ready();
 
       const selector = this.selector();
-      const options  = this.options(data);
 
       if (this.props.paginate) {
         data.totalRows = collection.find(selector).count();
       }
+
+      const options = this.options({ totalRows: data.totalRows });
 
       data.rows = collection.find(selector, options).fetch();
     }
