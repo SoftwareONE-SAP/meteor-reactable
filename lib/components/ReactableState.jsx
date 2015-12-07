@@ -76,7 +76,16 @@ ReactableState = React.createClass({
     if (isNaN(num) || num < 1) num = 1;
 
     let paginate = { ...this.state.paginate };
+
+    /**
+     * When we change the limit, do some magic to recalculate the page
+     * number we're viewing too so that the top row on the old page
+     * still exists somewhere on the new page.
+     */
+    let top_row    = ((paginate.limit * (paginate.page - 1)) + 1);
+    paginate.page  = Math.ceil(top_row / num);
     paginate.limit = num;
+
     this.setState({ paginate });
   },
 
