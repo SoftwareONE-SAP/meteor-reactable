@@ -41,6 +41,7 @@ ReactableState = React.createClass({
       sort = {
         name:      field.name,
         direction: field.sort.direction || 1,
+        custom:    field.sort.custom    || null,
       };
       return true;
     });
@@ -52,8 +53,9 @@ ReactableState = React.createClass({
     let state = null;
     if (this.props.paginate) {
       state = {
-        page:  this.props.paginate.defaultPage || 1,
-        limit: this.props.paginate.defaultLimit,
+        page:   this.props.paginate.defaultPage || 1,
+        limit:  this.props.paginate.defaultLimit,
+        custom: this.props.paginate.custom || null,
       };
       if (this.props.paginate.ui) {
         state.ui = this.props.paginate.ui;
@@ -90,10 +92,12 @@ ReactableState = React.createClass({
   },
 
   onHeadCellClick (field) {
+    if (!field.sort) return;
+
     const name = field.name;
 
-    let sort_spec = field.sort;
-    let sort      = this.state.sort || {};
+    const sort_spec = field.sort;
+    let sort = this.state.sort || {};
 
     if (sort.name === name) {
       sort.direction *= -1;
@@ -101,6 +105,8 @@ ReactableState = React.createClass({
       sort.name      = name;
       sort.direction = sort_spec.direction || 1;
     }
+    sort.custom = sort_spec.custom || null;
+
     this.setState({ sort });
   },
 

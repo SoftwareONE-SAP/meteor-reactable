@@ -21,6 +21,7 @@ ReactableTypeField = T.shape({
     T.shape({
       direction: T.oneOf([-1, 1]),
       default:   T.bool,
+      custom:    T.func,
     }),
   ]),
 });

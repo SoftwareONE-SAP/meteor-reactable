@@ -20,7 +20,10 @@ Reactable = React.createClass({
       // Convert "sort" format from simple to advanced
       if (typeof field.sort === 'number') {
         field.sort = { direction: field.sort };
+      } else if (typeof field.sort === 'object' && !field.direction) {
+        field.direction = 1;
       }
+
       return Reactable.applyFieldDefaults(field);
     });
 

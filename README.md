@@ -422,6 +422,28 @@ When the data source is a `Mongo.Collection`, the sorting will happen by passing
 
 When a field is sortable, clicking the `<th/>` at the head of the associated table column will cause Reactable to sort on that particular column. Clicking a second time will reverse the sort direction.
 
+#### Custom sort function
+
+You can override the default sorting function by specifying your own in `field.sort.custom`. This function is passed to the standard JavaScript
+sorting function. For example, for a case insensitive alphanumeric sort:
+
+```javascript
+var config = {
+  fields: [
+    sort: {
+      name: 'last_name',
+      custom: function (a, b) {
+        return a.toLowerCase() > b.toLowerCase() ? 1
+             : a.toLowerCase() < b.toLowerCase() ? -1
+             : 0; // Or:
+      }
+    }
+  ]
+}
+```
+
+Inside your sorting function, you can access other columns of data from the two corresponding rows. In the above example, `a` can also be retrieved from `this.row[0].last_name` and `b` from `this.row[1].last_name`.
+
 ### `config.tr` [ `React class` ]
 
 The default React class for a `<tr/>` is:

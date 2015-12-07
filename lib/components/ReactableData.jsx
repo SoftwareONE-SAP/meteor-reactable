@@ -10,20 +10,33 @@ ReactableData = React.createClass({
     const source     = this.props.source;
     const collection = source.collection;
 
-    let data = {};
+    if (!this.props.isReactive) return {};
 
-    if (this.props.isReactive) {
-      data.ready = this.subscribe().ready();
+    const customSorting = this.props.sort && this.props.sort.custom;
 
-      const selector = this.selector();
+    let data = {
+      ready: this.subscribe().ready(),
+    };
 
-      if (this.props.paginate) {
-        data.totalRows = collection.find(selector).count();
-      }
+    const selector = this.selector();
 
-      const options = this.options({ totalRows: data.totalRows });
+    if (!customSorting && this.props.paginate) {
+      data.totalRows = collection.find(selector).count();
+    }
 
-      data.rows = collection.find(selector, options).fetch();
+    let options = this.options({ totalRows: data.totalRows });
+    if (customSorting) {
+      delete options.sort;
+      delete options.skip;
+      delete options.limit;
+    }
+
+    data.rows = collection.find(selector, options).fetch();
+
+    if (customSorting) {
+      data.totalRows = data.rows.length;
+      data.rows = this.sort(data.rows, this.props.sort);
+      data.rows = this.paginate(data.rows, this.props.paginate);
     }
 
     return data;
@@ -39,6 +52,7 @@ ReactableData = React.createClass({
 
     let data = {
       ready: true,
+      totalRows: collection.length,
     };
 
     // Add fake _id's if they don't already exist
@@ -49,32 +63,9 @@ ReactableData = React.createClass({
       });
     }(0);
 
-    // Apply sorting
-    if (this.props.sort) {
-      const name = this.props.sort.name;
-      data.rows = data.rows.sort((a,b) => a[ name ] > b[ name ]);
-      if (this.props.sort.direction < 0) {
-        data.rows = data.rows.reverse();
-      }
-    }
+    data.rows = this.sort(data.rows, this.props.sort);
+    data.rows = this.paginate(data.rows, this.props.paginate)
 
-    data.totalRows = data.rows.length;
-
-    // Apply pagination
-    if (this.props.paginate) {
-      let { limit, page } = this.props.paginate;
-
-      const maxPage = this.maxPage(limit, data.totalRows);
-      if (page > maxPage) page = maxPage;
-
-      const startRow = limit * ( page - 1 );
-      const endRow   = limit * page;
-      let rows = [];
-      for (let i = startRow; i < endRow && i < data.totalRows; ++i) {
-        rows.push(data.rows[i]);
-      }
-      data.rows = rows;
-    }
     return data;
   },
 
@@ -88,22 +79,20 @@ ReactableData = React.createClass({
     delete props.source;
     Object.keys(data).forEach(k => props[ k ] = data[ k ]);
 
-    // Pagination
-    if (props.hasOwnProperty('totalRows')) {
+    // Pagination info
+    if (props.paginate) {
       let paginate = { ...props.paginate };
-      paginate.totalRows = props.totalRows;
-      delete props.totalRows;
+      if (props.hasOwnProperty('totalRows')) {
+        paginate.totalRows = props.totalRows;
+        delete props.totalRows;
 
-      if (paginate.totalRows === 0) {
-        paginate.pages = 1;
+        paginate.pages   = this.maxPage(paginate.limit, paginate.totalRows);
+        paginate.page    = Math.min(paginate.page, paginate.pages);
+        paginate.hasMore = paginate.pages > paginate.page;
       } else {
-        paginate.pages = this.maxPage(paginate.limit, paginate.totalRows);
+        paginate.hasMore = !!data.rows.length;
       }
-      if (paginate.page > paginate.pages) {
-        paginate.page = paginate.pages;
-      }
-      paginate.hasMore = paginate.pages > paginate.page;
-      props.paginate   = paginate;
+      props.paginate = paginate;
     }
 
     return <ReactableUI {...props}/>;
@@ -212,11 +201,49 @@ ReactableData = React.createClass({
     return fields;
   },
 
+  /**
+   * Returns max page number for pagination
+   * @param  {number} limit     Pagination limit
+   * @param  {number} totalRows Total number of rows
+   * @return {number}           Max page number
+   */
   maxPage (limit, totalRows) {
-    let pages     = totalRows / limit;
-    let realPages = parseInt(pages);
-    if (realPages < pages) ++realPages;
-    return realPages;
+    return Math.max(Math.ceil(totalRows / limit), 1);
+  },
+
+  /**
+   * Client side sorting. Triggered for non-reactive data sources
+   * and reactive data sources with a custom sorting function
+   */
+  sort (rows, spec) {
+    if (spec) {
+      const name = spec.name;
+      rows = rows.sort((row1, row2) => {
+        const a = row1[ name ];
+        const b = row2[ name ];
+        if (spec.custom) {
+          const ctx = { row: [row1, row2] };
+          return spec.custom.bind(ctx)(a, b);
+        } else {
+          return a > b ? 1 : a < b ? -1 : 0;
+        }
+      });
+      if (spec.direction === -1) rows = rows.reverse();
+    }
+    return rows;
+  },
+
+  /**
+   * Client side pagination. Triggered for non-reactive data sources
+   * and reactive data sources with a custom sorting function
+   */
+  paginate (rows, spec) {
+    if (spec) {
+      const limit = spec.limit;
+      const page  = Math.min(spec.page, this.maxPage(limit, rows.length));
+      rows = rows.splice(limit * ( page - 1 ), limit);
+    }
+    return rows;
   },
 
 });
