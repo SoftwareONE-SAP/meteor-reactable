@@ -5,7 +5,7 @@
 
 const T = React.PropTypes;
 
-ReactableTypeClasses = T.oneOfType([ T.string, T.arrayOf(T.string), T.func ]);
+ReactableTypeClasses = T.oneOfType([ T.string, T.array, T.func ]);
 
 ReactableTypeField = T.shape({
   name:      T.string,
