@@ -426,7 +426,7 @@ var config = {
 
 When the data source is a `Mongo.Collection`, the sorting will happen by passing sort options to the Mongo `Collection.find` function. When the data source is a non-reactive `Array`, the standard JavaScript sort function is used.
 
-If you set `fields.sort.transform` to `true`, then the sorting will happen based on the transformed version of the value. See `field.transform`.
+If you set `field.sort.transform` to `true`, then the sorting will happen based on the transformed version of the value. See `field.transform`. If there is no `field.name` set and there is a `field.transform`, then `field.sort.transform` defaults to `true`.
 
 When a field is sortable, clicking the `<th/>` at the head of the associated table column will cause Reactable to sort on that particular column. Clicking a second time will reverse the sort direction.
 
