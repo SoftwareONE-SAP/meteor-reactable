@@ -274,7 +274,7 @@ var config = {
   fields: [
     {
       name: "first_name",
-      transform: function (fname, data) {
+      transform: function (fname) {
         return fname.toUpperCase();
       },
     }
@@ -282,16 +282,22 @@ var config = {
 }
 ```
 
-The second argument `data` is an object containing all of the data for this row in case your transform relies on information from one of the other fields. For example, when determining the value to go in the "first_name" column for a particular row, it might be called as follows:
+When transforming the value for a particular cell like this, you can also access the rest of the row data by looking in the `this.row` object. For example, you might only want to upper-case the value of `first_name` if `last_name` is Smith:
 
 ```javascript
-rowData = {
-  first_name: 'Mike',
-  last_name:  'Cardwell',
-  rating:     10
-};
-
-var value = transform(rowData.first_name, rowData);
+var config = {
+  fields: [
+    {
+      name: "first_name",
+      transform: function (fname) {
+        if (this.row.last_name === 'Smith') {
+          fname = fname.toUpperCase();
+        }
+        return fname;
+      },
+    }
+  ]
+}
 ```
 
 #### 4. `field.tdClasses` [ `String` | `Array` | `Function` ]

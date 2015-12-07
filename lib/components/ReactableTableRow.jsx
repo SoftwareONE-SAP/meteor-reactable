@@ -50,7 +50,7 @@ ReactableTableRow = React.createClass({
       let classes = this.getClasses([field.tdClasses], value);
 
       if (field.hasOwnProperty('transform')) {
-        value = field.transform.call(this, value);
+        value = field.transform.call({ row: this.props.data }, value);
       }
 
       if (value !== null && typeof value === 'object') {
