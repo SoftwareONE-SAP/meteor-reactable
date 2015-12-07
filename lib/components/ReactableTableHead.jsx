@@ -7,14 +7,16 @@ ReactableTableHead = React.createClass({
 
   render () {
 
+    let count = 0;
     const cells = this.props.fields.map(field => {
+      let column = count++;
       return (
         <ReactableTableHeadCell
           name    = { field.name      }
           label   = { field.label     }
           classes = { field.thClasses }
           thInner = { field.thInner   }
-          onClick = { () => this.onCellClick(field) }
+          onClick = { () => this.onCellClick(column) }
         />
       );
     });
@@ -26,9 +28,9 @@ ReactableTableHead = React.createClass({
     );
   },
 
-  onCellClick (field) {
+  onCellClick (column) {
     if (this.props.onCellClick) {
-      this.props.onCellClick(field);
+      this.props.onCellClick(column);
     }
   }
 });

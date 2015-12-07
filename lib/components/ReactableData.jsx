@@ -12,7 +12,17 @@ ReactableData = React.createClass({
 
     if (!this.props.isReactive) return {};
 
-    const customSorting = this.props.sort && this.props.sort.custom;
+    let mongoSorting = false;
+    if (this.props.sort) {
+      mongoSorting = true;
+      if (this.props.sort.custom) {
+        mongoSorting = false;
+      } else if (this.props.sort.transform) {
+        mongoSorting = false;
+      } else if (typeof this.props.sort.name !== 'string') {
+        mongoSorting = false;
+      }
+    }
 
     let data = {
       ready: this.subscribe().ready(),
@@ -20,12 +30,12 @@ ReactableData = React.createClass({
 
     const selector = this.selector();
 
-    if (!customSorting && this.props.paginate) {
+    if (mongoSorting && this.props.paginate) {
       data.totalRows = collection.find(selector).count();
     }
 
     let options = this.options({ totalRows: data.totalRows });
-    if (customSorting) {
+    if (!mongoSorting) {
       delete options.sort;
       delete options.skip;
       delete options.limit;
@@ -33,7 +43,7 @@ ReactableData = React.createClass({
 
     data.rows = collection.find(selector, options).fetch();
 
-    if (customSorting) {
+    if (!mongoSorting) {
       data.totalRows = data.rows.length;
       data.rows = this.sort(data.rows, this.props.sort);
       data.rows = this.paginate(data.rows, this.props.paginate);
@@ -170,9 +180,11 @@ ReactableData = React.createClass({
     };
 
     if (this.props.sort) {
-      let sort = {};
-      sort[ this.props.sort.name ] = this.props.sort.direction;
-      options.sort = sort;
+      if (typeof this.props.sort.name === 'string') {
+        let sort = {};
+        sort[ this.props.sort.name ] = this.props.sort.direction;
+        options.sort = sort;
+      }
     }
 
     if (this.props.paginate) {
@@ -219,11 +231,20 @@ ReactableData = React.createClass({
     if (spec) {
       const name = spec.name;
       rows = rows.sort((row1, row2) => {
-        const a = row1[ name ];
-        const b = row2[ name ];
+        let a = row1[ name ];
+        let b = row2[ name ];
+
+        if (spec.transform || !spec.name) {
+          const transform = this.props.fields[ spec.column ].transform;
+          if (transform) {
+            a = transform.call({ row: row1 }, a);
+            b = transform.call({ row: row2 }, b);
+          }
+        }
+
         if (spec.custom) {
           const ctx = { row: [row1, row2] };
-          return spec.custom.bind(ctx)(a, b);
+          return spec.custom.call(ctx, a, b);
         } else {
           return a > b ? 1 : a < b ? -1 : 0;
         }

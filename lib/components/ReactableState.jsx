@@ -35,7 +35,6 @@ ReactableState = React.createClass({
     let sort = null;
 
     this.props.fields.some(field => {
-      if (!field.hasOwnProperty('name'))  return false;
       if (typeof field.sort !== 'object') return false;
       if (!field.sort.default)            return false;
       sort = {
@@ -55,7 +54,6 @@ ReactableState = React.createClass({
       state = {
         page:   this.props.paginate.defaultPage || 1,
         limit:  this.props.paginate.defaultLimit,
-        custom: this.props.paginate.custom || null,
       };
       if (this.props.paginate.ui) {
         state.ui = this.props.paginate.ui;
@@ -91,21 +89,23 @@ ReactableState = React.createClass({
     this.setState({ paginate });
   },
 
-  onHeadCellClick (field) {
+  onHeadCellClick (column) {
+    const field = this.props.fields[ column ];
+
     if (!field.sort) return;
 
-    const name = field.name;
+    let sort_spec = field.sort;
+    let sort      = this.state.sort || {};
 
-    const sort_spec = field.sort;
-    let sort = this.state.sort || {};
-
-    if (sort.name === name) {
+    if (sort.column === column) {
       sort.direction *= -1;
     } else {
-      sort.name      = name;
+      sort.column    = column;
+      sort.name      = field.name;
       sort.direction = sort_spec.direction || 1;
+      sort.custom    = sort_spec.custom    || null;
+      sort.transform = sort_spec.transform;
     }
-    sort.custom = sort_spec.custom || null;
 
     this.setState({ sort });
   },
