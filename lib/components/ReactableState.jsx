@@ -34,13 +34,14 @@ ReactableState = React.createClass({
   getInitialSortState () {
     let sort = null;
 
+    let column = -1;
     this.props.fields.some(field => {
+      ++column;
       if (typeof field.sort !== 'object') return false;
       if (!field.sort.default)            return false;
       sort = {
-        name:      field.name,
+        column:    column,
         direction: field.sort.direction || 1,
-        custom:    field.sort.custom    || null,
       };
       return true;
     });
@@ -101,10 +102,7 @@ ReactableState = React.createClass({
       sort.direction *= -1;
     } else {
       sort.column    = column;
-      sort.name      = field.name;
       sort.direction = sort_spec.direction || 1;
-      sort.custom    = sort_spec.custom    || null;
-      sort.transform = sort_spec.transform;
     }
 
     this.setState({ sort });

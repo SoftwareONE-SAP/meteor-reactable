@@ -14,12 +14,14 @@ ReactableData = React.createClass({
 
     let mongoSorting = false;
     if (this.props.sort) {
+      const field = this.props.fields[ this.props.sort.column ];
+
       mongoSorting = true;
-      if (this.props.sort.custom) {
+      if (field.sort.custom) {
         mongoSorting = false;
-      } else if (this.props.sort.transform) {
+      } else if (field.sort.transform) {
         mongoSorting = false;
-      } else if (typeof this.props.sort.name !== 'string') {
+      } else if (typeof field.name !== 'string') {
         mongoSorting = false;
       }
     }
@@ -45,8 +47,8 @@ ReactableData = React.createClass({
 
     if (!mongoSorting) {
       data.totalRows = data.rows.length;
-      data.rows = this.sort(data.rows, this.props.sort);
-      data.rows = this.paginate(data.rows, this.props.paginate);
+      data.rows = this.sort(data.rows);
+      data.rows = this.paginate(data.rows);
     }
 
     return data;
@@ -73,8 +75,8 @@ ReactableData = React.createClass({
       });
     }(0);
 
-    data.rows = this.sort(data.rows, this.props.sort);
-    data.rows = this.paginate(data.rows, this.props.paginate)
+    data.rows = this.sort(data.rows);
+    data.rows = this.paginate(data.rows);
 
     return data;
   },
@@ -180,9 +182,11 @@ ReactableData = React.createClass({
     };
 
     if (this.props.sort) {
-      if (typeof this.props.sort.name === 'string') {
+      const { direction, column } = this.props.sort;
+      const field = this.props.fields[ column ];
+      if (field && field.name) {
         let sort = {};
-        sort[ this.props.sort.name ] = this.props.sort.direction;
+        sort[ field.name ] = direction;
         options.sort = sort;
       }
     }
@@ -227,30 +231,30 @@ ReactableData = React.createClass({
    * Client side sorting. Triggered for non-reactive data sources
    * and reactive data sources with a custom sorting function
    */
-  sort (rows, spec) {
-    if (spec) {
-      const name = spec.name;
-      rows = rows.sort((row1, row2) => {
-        let a = row1[ name ];
-        let b = row2[ name ];
+  sort (rows) {
+    if (!this.props.sort) return rows;
 
-        if (spec.transform || !spec.name) {
-          const transform = this.props.fields[ spec.column ].transform;
-          if (transform) {
-            a = transform.call({ row: row1 }, a);
-            b = transform.call({ row: row2 }, b);
-          }
-        }
+    const { direction, column } = this.props.sort;
+    const field = this.props.fields[ column ];
 
-        if (spec.custom) {
-          const ctx = { row: [row1, row2] };
-          return spec.custom.call(ctx, a, b);
-        } else {
-          return a > b ? 1 : a < b ? -1 : 0;
-        }
-      });
-      if (spec.direction === -1) rows = rows.reverse();
-    }
+    rows = rows.sort((row1, row2) => {
+      let a = row1[ field.name ];
+      let b = row2[ field.name ];
+
+      if ((field.sort.transform || !field.name) && field.transform) {
+        a = field.transform.call({ row: row1 }, a);
+        b = field.transform.call({ row: row2 }, b);
+      }
+
+      if (field.sort.custom) {
+        const ctx = { row: [row1, row2] };
+        return field.sort.custom.call(ctx, a, b);
+      } else {
+        return a > b ? 1 : a < b ? -1 : 0;
+      }
+    });
+    if (direction === -1) rows = rows.reverse();
+
     return rows;
   },
 
@@ -258,13 +262,12 @@ ReactableData = React.createClass({
    * Client side pagination. Triggered for non-reactive data sources
    * and reactive data sources with a custom sorting function
    */
-  paginate (rows, spec) {
-    if (spec) {
-      const limit = spec.limit;
-      const page  = Math.min(spec.page, this.maxPage(limit, rows.length));
-      rows = rows.splice(limit * ( page - 1 ), limit);
-    }
-    return rows;
+  paginate (rows) {
+    if (!this.props.paginate) return rows;
+    const spec  = this.props.paginate;
+    const limit = spec.limit;
+    const page  = Math.min(spec.page, this.maxPage(limit, rows.length));
+    return rows.splice(limit * ( page - 1 ), limit);
   },
 
 });
