@@ -34,6 +34,30 @@ Reactable = React.createClass({
       };
     }
 
+    if (props.paginate.serverSide) {
+      if (Array.isArray(props.source.collection)) {
+        throw new Error("Can't use server side pagination with a non-reactive data source");
+      }
+      let hasSorter = false;
+      props.fields.forEach(field => {
+        if (field.sort) {
+          hasSorter = true;
+          if (field.sort.custom) {
+            throw new Error("Can't use server side pagination with a custom sort function");
+          }
+          if (field.sort.transform) {
+            throw new Error("Can't use server side pagination with a post-transform sort");
+          }
+          if (typeof field.name !== 'string' && field.transform) {
+            throw new Error("Can't use server side pagination with a sortable non-named field");
+          }
+        }
+      });
+      if (!hasSorter) {
+        throw new Error("Can't use server side pagination without at least one server-side sortable field");
+      }
+    }
+
     return (
       <ReactableState { ...props }/>
     );

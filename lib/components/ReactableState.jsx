@@ -19,9 +19,10 @@ ReactableState = React.createClass({
     props.sort = this.state.sort;
 
     if (this.state.paginate) {
-      props.paginate      = this.state.paginate;
-      props.onChangePage  = this.onChangePage;
-      props.onChangeLimit = this.onChangeLimit;
+      props.paginate            = this.state.paginate;
+      props.paginate.serverSide = this.props.paginate.serverSide,
+      props.onChangePage        = this.onChangePage;
+      props.onChangeLimit       = this.onChangeLimit;
     }
 
     props.onHeadCellClick = this.onHeadCellClick;
@@ -32,11 +33,18 @@ ReactableState = React.createClass({
   },
 
   getInitialSortState () {
-    let sort = null;
+    let defaultSort = null;
+    let firstSortable = null;
 
     let column = -1;
     this.props.fields.some(field => {
       ++column;
+
+      if (firstSortable === null && field.sort) {
+        const direction = typeof field.sort === 'object' ? field.sort.direction : field.sort;
+        firstSortable = { column, direction };
+      }
+
       if (typeof field.sort !== 'object') return false;
       if (!field.sort.default)            return false;
       sort = {
@@ -46,15 +54,15 @@ ReactableState = React.createClass({
       return true;
     });
 
-    return sort;
+    return sort || firstSortable;
   },
 
   getInitialPaginationState () {
     let state = null;
     if (this.props.paginate) {
       state = {
-        page:   this.props.paginate.defaultPage || 1,
-        limit:  this.props.paginate.defaultLimit,
+        page:  this.props.paginate.defaultPage || 1,
+        limit: this.props.paginate.defaultLimit,
       };
       if (this.props.paginate.ui) {
         state.ui = this.props.paginate.ui;

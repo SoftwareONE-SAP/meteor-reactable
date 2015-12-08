@@ -196,6 +196,27 @@ var config = {
 }
 ```
 
+Whenever Reactable subscribes to a publication, it appends an additional argument to any existing arguments containing some useful data which you may want to take advantage of. See `Reactable.publish` for a useful helper. That extra argument is an object looking something like this:
+
+```javascript
+{
+  options: {
+    fields: {
+      first_name: 1,
+      last_name: 1,
+    },
+    sort: {
+      first_name: -1,
+    },
+    skip: 0,
+    limit: 10,
+
+  }
+}
+```
+
+It will always contain `options.fields` which is a list of data which this particular table requires. `sort`, `skip` and `limit` are only passed when `config.paginate.serverSide` is enabled. `Reactable.publish` automates validation and use of much of this data.
+
 ### `config.source.fields` [ `Array` ]
 
 This optional array contains a list of document keys which we wish to have access to. As with MongoDB you also get the _id. If the collection is an `Array` of `Objects` rather than a Mongo collection and an _id doesn't exist, a fake one is added. Any key which has an entry in `config.fields` (discussed next) will automatically be in this list, so usually you don't need to specify it. One example of when you might need this functionality:
@@ -557,6 +578,71 @@ Inside your custom component you have access to many different `props`:
     A function which you call when you want to skip to the next page of results
 9. `props.prevPage`
     A function which you call when you want to skip to the previous page of results.
+
+#### `config.paginate.serverSide` [ `Mongo.Collection` ]
+
+Imagine you have a collection with 1000 rows and you want to display 10 at a time to the user using pagination. By default, all 1000 rows will be sent to the browser and the table will pick 10 to display. This can be slow and resource intensive. Wouldn't it be better if you could tell the server to only send the ten rows which you want to currently show the user?
+
+To use server side pagination there are some restrictions. Firstly, Reactable must be in control of the subscription, so it can add extra args containing pagination data. That means you can't pass an existing subscription using `config.source.subscribe`, but must use one of the more advanced options where you describe how Reactable should create the subscription. Secondly, in order to paginate on the server, you must sort first. So server side sorting is a must. Which rules out any custom sorting functions or sorting on transformed data, as it is all done inside the server side Mongo query.
+
+If `config.paginate.serverSide` is set, it must point to a `Mongo.Collection` containing a document of this format:
+
+```javascript
+{
+  "_id": "stats",
+  "count": 1000
+}
+```
+
+That is because when using server side pagination, Reactable expects to have access to a secondary collection which contains information about the server-side data pre-pagination, i'e how many total rows there are. Thankfully, there is a server side helper function named `Reactable.publish()` which can do some of this work for you. Where you may have done this in the past:
+
+```javascript
+var People = new Meteor.Collection('people');
+Meteor.publish('people', function (){
+  var selector = { userId: this.userId };
+  var options  = {};
+  return People.find(selector, options);
+});
+```
+
+You would now do:
+
+```javascript
+var People = new Meteor.Collection('people');
+Reactable.publish('people', function (){
+  var selector = { userId: this.userId };
+  var options  = {};
+  return {
+    collection: People,
+    selector:   selector,
+    options:    options,
+  };
+});
+```
+
+This gives you a couple of things. Firstly it will add suitable limit/skip/sort/fields entries to the options before running the `find`. Secondly it will not only publish data to the "people" collection, but will also publish to a virtual collection named "people/stats" on the client side. So on the client side we can do:
+
+```javascript
+var PeopleStats = new Meteor.Collection('people/stats');
+config = {
+  paginate: {
+    serverSide: PeopleStats,
+  },
+}
+```
+
+One important difference is when doing `Reactable.publish` the publication name is used as the name of the client side collection to write to. So if you do this on the server side:
+
+```javascript
+var People = new Meteor.Collection('people');
+Reactable.publish('wibble', function (){
+  return {
+    collection: People,
+  }
+});
+```
+
+Then on the client side, the data will actually be written to a collection named "wibble", and the stats to a collection named "wibble/stats". With Meteor.publish, this data would have been written to the "people" collection on the client side.
 
 ## Global Configuration
 

@@ -9,8 +9,9 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.3');
 
+  api.use('react');
+
   api.use([
-    'react',
     'react-meteor-data',
     'react-template-helper',
     'templating',
@@ -35,6 +36,10 @@ Package.onUse(function(api) {
     'lib/components/ReactableTableCell.jsx',
     'lib/components/ReactableNavigation.jsx',
   ], 'client');
+
+  api.addFiles([
+    'lib/Publisher.jsx',
+  ], 'server');
 
   api.export('Reactable');
 

@@ -57,6 +57,7 @@ ReactableConfigShape = {
       ui:           T.func, // React classes
       defaultPage:  T.number,
       defaultLimit: T.number.isRequired,
+      serverSide:   T.object, // Stats collection
     }),
   ]),
 };
