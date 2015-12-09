@@ -267,11 +267,21 @@ ReactableData = React.createClass({
    * and reactive data sources with a custom sorting function
    */
   paginate (rows) {
-    if (!this.jsPagination()) return rows;
-    const spec  = this.props.paginate;
-    const limit = spec.limit;
-    const page  = spec.page;
-    return rows.splice(limit * ( page - 1 ), limit);
+    if (this.jsPagination()) {
+      const spec  = this.props.paginate;
+      const limit = spec.limit;
+      const page  = spec.page;
+      rows = rows.splice(limit * ( page - 1 ), limit);
+    } else if (this.serverSidePagination()){
+      /**
+       * When we do server side pagination, if the DDP adds are
+       * done before the removes then the displayed table may
+       * momentarily contain more data than the limit, which is a
+       * jarring effect. So we perform another slice here.
+       */
+      rows = rows.splice(0, this.props.paginate.limit);
+    }
+    return rows;
   },
 
   serverSidePagination () {
