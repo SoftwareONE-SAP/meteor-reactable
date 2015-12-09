@@ -10,13 +10,6 @@ ReactableData = React.createClass({
     const source     = this.props.source;
     const collection = source.collection;
 
-    console.log('serverSidePagination', !!this.serverSidePagination());
-    console.log('queryPagination',      this.queryPagination());
-    console.log('jsPagination',         this.jsPagination());
-    console.log('serverSideSorting',    this.serverSideSorting());
-    console.log('querySorting',         this.querySorting());
-    console.log('jsSorting',            this.jsSorting());
-
     if (!this.props.isReactive) return {};
 
     let data = {
@@ -298,7 +291,8 @@ ReactableData = React.createClass({
   },
 
   querySorting () {
-    if (!this.props.sort)          return false;
+    if (!this.props.sort)       return false;
+    if (!this.props.isReactive) return false;
     const { direction, column } = this.props.sort;
     const field = this.props.fields[ column ];
     if (!field.name)          return false;
