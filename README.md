@@ -396,7 +396,7 @@ var config = {
 
 #### 8. `field.thInner` [ `React class` ]
 
-This works the same as `field.tdInner` with a few differences. Props passed to the class include `name`, `label` and `sort` (null, 'asc' or 'desc' depending on whether or not we're sorting on this column and the direction). `props.children` contains the suggested title calculated from the label or a cleaned up version of the name. Here is an example where the column title is wrapped inside an anchor tag:
+This works the same as `field.tdInner` with a few differences. Props passed to the class include `name`, and `sort` (null, 'asc' or 'desc' depending on whether or not we're sorting on this column and the direction). `props.children` contains the `label`. If a `label` for this field wasn't supplied, but a name was, then it is calculated from the name. Here is an example where the column title is wrapped inside an anchor tag:
 
 ```javascript
 var config = {

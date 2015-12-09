@@ -22,8 +22,15 @@ Reactable = React.createClass({
       // Convert "sort" format from simple to advanced
       if (typeof field.sort === 'number') {
         field.sort = { direction: field.sort };
-      } else if (typeof field.sort === 'object' && !field.direction) {
-        field.direction = 1;
+      } else if (typeof field.sort === 'object' && !field.sort.direction) {
+        field.sort.direction = 1;
+      }
+
+      // If a label isn't specified, calculate one from the name
+      if (typeof field.label !== 'string' && field.name) {
+        field.label = field.name.split(/[_.]/).map(word => {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }).join(' ').trim();
       }
 
       return Reactable.applyFieldDefaults(field);

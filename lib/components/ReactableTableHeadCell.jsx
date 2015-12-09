@@ -19,20 +19,17 @@ ReactableTableHeadCell = React.createClass({
   },
 
   render () {
-    const title = this.getTitle();
-
     let inner;
     if (this.props.thInner) {
       const Component = this.props.thInner;
       inner = (
         <Component
-          name  = { this.props.name  }
-          label = { this.props.label }
-          sort  = { this.props.sort  }
-        >{ title }</Component>
+          name  = { this.props.name }
+          sort  = { this.props.sort }
+        >{ this.props.label }</Component>
       );
     } else {
-      inner = title;
+      inner = this.props.label;
     }
 
     const classes = this.getClasses([
@@ -52,18 +49,5 @@ ReactableTableHeadCell = React.createClass({
       this.props.onClick(e, this.props);
     }
   },
-
-  getTitle () {
-    let title = '';
-
-    if (this.props.label.length) {
-      title = this.props.label;
-    } else if (this.props.name.length) {
-      title = this.props.name.split(/[_.]/).map(word => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }).join(' ');
-    }
-    return title.trim();
-  }
 
 })
