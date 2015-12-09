@@ -646,30 +646,22 @@ Then on the client side, the data will actually be written to a collection named
 
 ## Global Configuration
 
-#### Reactable.setFieldDefaults [ `Function` ]
+#### Reactable.setConfigDefaults [ `Function` ]
 
-This feature is useful when you find yourself writing a lot of boiler plate code in your field definitions to set custom templates or classes. Given the following example:
+If you have any config which is going to be common amongst your various tables, you can use this feature to convert your configuration before it is used. For example, if you wished to add a class to every table named "wibble":
 
 ```javascript
-var config = {
-  fields: [
-    {
-      name: 'first_name',
-      sort: 1,
-      classes: 'sortable',
-      thInner: CustomSortableHeader,
-    },
-    {
-      name: 'last_name',
-      sort: 1,
-      classes: 'sortable',
-      thInner: CustomSortableHeader,
-    },
-  ]
-}
+Reactable.setConfigDefaults(function(config){
+  config.tableClasses = [ 'wibble', config.tableClasses ];
+  return config;
+});
 ```
 
-Wouldn't it be nice if you could just say that any field with a 'sort' key automatically gets the 'sortable' class and uses the CustomSortableHeader component for `field.thInner`? You can use setFieldDefaults to do this. It takes a callback function which takes a field as input and returns the replacement field. For example:
+You can call this multiple times. The functions you supply are run in the order they are added.
+
+#### Reactable.setFieldDefaults [ `Function` ]
+
+This feature is similar to `Reactable.setConfigDefaults`, except it is run for each field in your config. For example, if you wanted to use an alternative table column header template for every sortable field:
 
 ```javascript
 Reactable.setFieldDefaults(function(field){

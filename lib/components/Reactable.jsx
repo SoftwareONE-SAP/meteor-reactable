@@ -11,6 +11,8 @@ Reactable = React.createClass({
     let props = { ...this.props };
     delete props.children;
 
+    props = Reactable.applyConfigDefaults(props);
+
     props.isReactive = !Array.isArray(props.source.collection);
 
     // Field sorting fixups
@@ -65,7 +67,8 @@ Reactable = React.createClass({
 
   statics: () => {
 
-    let fieldDefaults = [];
+    let configDefaults = [];
+    let fieldDefaults  = [];
 
     return {
       setFieldDefaults (callback) {
@@ -74,6 +77,13 @@ Reactable = React.createClass({
       applyFieldDefaults (field) {
         fieldDefaults.forEach(func => field = func(field));
         return field;
+      },
+      setConfigDefaults (callback) {
+        configDefaults.push(callback);
+      },
+      applyConfigDefaults (config) {
+        configDefaults.forEach(func => config = func(config));
+        return config;
       },
     };
 
