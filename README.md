@@ -97,7 +97,7 @@ var config = {
 }
 ```
 
-The class "reactable" is always included.
+The class "reactable" is always included. An additional class of "loading" is added whilst the initial data set to display is being fetched so you can style based on it.
 
 **IMPORTANT** - Never modify `this.props`. It is Reacts immutable component properties.
 

@@ -8,7 +8,11 @@ ReactableUI = React.createClass({
 
   render () {
 
-    const classes = this.getClasses(['reactable', this.props.classes]);
+    const classes = this.getClasses([
+      'reactable',
+      this.props.classes,
+      this.props.ready ? null : 'loading',
+    ]);
 
     return (
       <div id={ this.props.id } className={ classes }>
