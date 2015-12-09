@@ -43,7 +43,7 @@ ReactableTable = React.createClass({
           tr        = { this.props.tr        }
           classes   = { this.props.trClasses }
           fields    = { this.props.fields    }
-          data      = { row                  }
+          row       = { row                  }
           rowNumber = { count++              }
         />
       );

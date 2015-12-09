@@ -107,7 +107,7 @@ The same as `config.classes` except without the default "reactable" class, and i
 
 ### `config.trClasses` [ `String` | `Array` | `Function` ]
 
-The same as `config.tableClasses` except it applies to the `<tr/>` tag instead. When running as a `Function` has access to `props.fields`, `props.data` and `props.rowNumber`.
+The same as `config.tableClasses` except it applies to the `<tr/>` tag instead. When running as a `Function` has access to `props.fields`, `props.row` and `props.rowNumber`.
 
 ### `config.id` [ `String` ]
 
@@ -230,7 +230,7 @@ var config = {
     {
       name: 'name',
       classes: function () {
-        return rowData.sex === 'male' ? 'blue' : 'pink';
+        return this.row.sex === 'male' ? 'blue' : 'pink';
       }
     },
   ]
@@ -323,7 +323,7 @@ var config = {
 
 #### 4. `field.tdClasses` [ `String` | `Array` | `Function` ]
 
-Optionally specify a list of classes to be added to each `<td/>` in this column. If supplied an `Array` then it is joined with spaces. If supplied a `Function`, then that `Function` is called with the value as the first argument and access to `props.fields`, `props.data` (row data) and `props.rowNumber`. It must return either a `String` or an `Array` of Strings. For example:
+Optionally specify a list of classes to be added to each `<td/>` in this column. If supplied an `Array` then it is joined with spaces. If supplied a `Function`, then that `Function` is called with the value as the first argument and access to `props.fields`, `props.row` (row data) and `props.rowNumber`. It must return either a `String` or an `Array` of Strings. For example:
 
 ```javascript
 var config = {
@@ -333,7 +333,7 @@ var config = {
       classes: "blue strong", // or:
       classes: ["blue", "strong"], // or:
       classes: function (fname) {
-        var rowData = this.props.data;
+        var rowData = this.props.row;
         var classes = ["blue", "strong"];
         if (fname === 'Mike') classes.push('nice');
         if (rowData.last_name === 'Cardwell') classes.push('superb');
@@ -489,7 +489,7 @@ React.createClass({
 });
 ```
 
-Where `props.children` is a list of table cells `<td/>`. If you want to override it, set `config.tr` to be your replacement React class. Other props available to this class are `props.data` which contains all of the data for the row in an object keyed on name, and also `props.fields` which contains an array of field definitions for the table.
+Where `props.children` is a list of table cells `<td/>`. If you want to override it, set `config.tr` to be your replacement React class. Other props available to this class are `props.row` which contains all of the data for the row in an object keyed on name, and also `props.fields` which contains an array of field definitions for the table.
 
 There may be cases where you want to return multiple `<tr/>` for a single row. Because of the way React works with only a single element at the root of each component class, you need to wrap them in a `<tbody/>`:
 
@@ -504,7 +504,7 @@ var config = {
             <td colSpan={ this.props.fields.length }>
               Although I included your first name in the above row, I decided
               to include it in this row too with a bunch of text for some
-              reason: { this.props.data.first_name }
+              reason: { this.props.row.first_name }
             </td>
           </tr>
         </tbody>

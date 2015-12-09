@@ -16,7 +16,7 @@ ReactableTableRow = React.createClass({
     classes:   ReactableTypeClasses,
     tr:        React.PropTypes.func, // React class
     fields:    React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    data:      React.PropTypes.object.isRequired,
+    row:       React.PropTypes.object.isRequired,
     rowNumber: React.PropTypes.number.isRequired,
   },
 
@@ -28,29 +28,29 @@ ReactableTableRow = React.createClass({
       if (field.hasOwnProperty('name')) {
 
         let name = field.name;
-        let data = this.props.data;
+        let row  = this.props.row;
 
         while (true) {
           const i = name.indexOf('.');
           if (i === -1) break;
           const head = name.substr(0, i);
           name = name.substr(i + 1);
-          if (data.hasOwnProperty(head) && typeof data[ head ] === 'object') {
-            data = data[ head ];
+          if (row.hasOwnProperty(head) && typeof row[ head ] === 'object') {
+            row = row[ head ];
           } else {
             value = null;
           }
         }
 
         if (typeof value === 'undefined') {
-          value = data[ name ];
+          value = row[ name ];
         }
       }
 
       let classes = this.getClasses([field.tdClasses], value);
 
       if (field.hasOwnProperty('transform')) {
-        value = field.transform.call({ row: this.props.data }, value);
+        value = field.transform.call({ row: this.props.row }, value);
       }
 
       if (value !== null && typeof value === 'object') {
@@ -64,7 +64,7 @@ ReactableTableRow = React.createClass({
       const TableCell = field.hasOwnProperty('td') ? field.td : ReactableTableCell;
 
       let cellProps = {
-        row:       this.props.data,
+        row:       this.props.row,
         rowNumber: this.props.rowNumber,
         colNumber: colNumber++,
       };
@@ -89,7 +89,7 @@ ReactableTableRow = React.createClass({
     return React.createElement(Row, {
       classes:   this.getClasses([this.props.classes]),
       fields:    this.props.fields,
-      data:      this.props.data,
+      row:       this.props.row,
       rowNumber: this.props.rowNumber,
     }, ...cells);
   },
