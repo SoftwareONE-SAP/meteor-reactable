@@ -3,11 +3,12 @@ ReactableTable = React.createClass({
   mixins: [ ReactableClasses ],
 
   propTypes: {
-    classes:         ReactableTypeClasses,
-    trClasses:       ReactableTypeClasses,
-    tr:              React.PropTypes.func, // React class
-    addTbody:        React.PropTypes.bool,
-    fields:          React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    classes:           ReactableTypeClasses,
+    trClasses:         ReactableTypeClasses,
+    tr:                React.PropTypes.func, // React class
+    addTbody:          React.PropTypes.bool,
+    staticColumnWidth: React.PropTypes.bool,
+    fields:            React.PropTypes.arrayOf(ReactableTypeField).isRequired,
     rows:            React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     onHeadCellClick: React.PropTypes.func,
   },
@@ -16,6 +17,20 @@ ReactableTable = React.createClass({
     return {
       addTbody: true,
     };
+  },
+
+  componentDidMount () {
+    if (this.props.staticColumnWidth) {
+      const tr        = React.findDOMNode(this).querySelector('thead > tr');
+      const cells     = tr.querySelectorAll('th');
+      const row_width = tr.offsetWidth;
+
+      for (let i = 0; i < cells.length; ++i) {
+        const cell  = cells[ i ];
+        const width = ( cell.offsetWidth / row_width * 100 ) + '%';
+        cell.width = width;
+      }
+    }
   },
 
   render () {

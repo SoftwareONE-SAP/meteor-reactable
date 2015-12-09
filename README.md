@@ -659,6 +659,10 @@ Reactable.setConfigDefaults(function(config){
 
 You can call this multiple times. The functions you supply are run in the order they are added.
 
+#### `config.staticColumnWidth` [ `Bool` ]
+
+If you set this to true, after a table is generated and displayed, Reactable looks at the full width of the table, and the relative widths of each column, and then sets a matching percentage width style on each column. The effect of this is that changes to the table data either through reactiveness or pagination wont cause the table column widths to auto-resize.
+
 #### Reactable.setFieldDefaults [ `Function` ]
 
 This feature is similar to `Reactable.setConfigDefaults`, except it is run for each field in your config. For example, if you wanted to use an alternative table column header template for every sortable field:

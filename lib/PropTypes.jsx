@@ -43,15 +43,16 @@ ReactableTypeSource = T.shape({
 });
 
 ReactableConfigShape = {
-  id:             T.string,
-  classes:        ReactableTypeClasses,
-  tableClasses:   ReactableTypeClasses,
-  trClasses:      ReactableTypeClasses,
-  tr:             T.func, // React class
-  addTbody:       T.bool,
-  source:         ReactableTypeSource.isRequired,
-  fields:         T.arrayOf(ReactableTypeField).isRequired,
-  paginate:       T.oneOfType([
+  id:                T.string,
+  classes:           ReactableTypeClasses,
+  tableClasses:      ReactableTypeClasses,
+  trClasses:         ReactableTypeClasses,
+  tr:                T.func, // React class
+  addTbody:          T.bool,
+  staticColumnWidth: T.bool,
+  source:            ReactableTypeSource.isRequired,
+  fields:            T.arrayOf(ReactableTypeField).isRequired,
+  paginate:          T.oneOfType([
     T.number,
     T.shape({
       ui:           T.func, // React classes
