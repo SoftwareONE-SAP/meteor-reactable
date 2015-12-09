@@ -107,7 +107,7 @@ The same as `config.classes` except without the default "reactable" class, and i
 
 ### `config.trClasses` [ `String` | `Array` | `Function` ]
 
-The same as `config.tableClasses` except it applies to the `<tr/>` tag instead. When running as a `Function` has access to `props.fields`, `props.data` and `props.count` which is the row number starting from 1.
+The same as `config.tableClasses` except it applies to the `<tr/>` tag instead. When running as a `Function` has access to `props.fields`, `props.data` and `props.rowNumber`.
 
 ### `config.id` [ `String` ]
 
@@ -323,7 +323,7 @@ var config = {
 
 #### 4. `field.tdClasses` [ `String` | `Array` | `Function` ]
 
-Optionally specify a list of classes to be added to each `<td/>` in this column. If supplied an `Array` then it is joined with spaces. If supplied a `Function`, then that `Function` is called with the value as the first argument and access to `props.fields`, `props.data` (row data) and `props.count` (row number). It must return either a `String` or an `Array` of Strings. For example:
+Optionally specify a list of classes to be added to each `<td/>` in this column. If supplied an `Array` then it is joined with spaces. If supplied a `Function`, then that `Function` is called with the value as the first argument and access to `props.fields`, `props.data` (row data) and `props.rowNumber`. It must return either a `String` or an `Array` of Strings. For example:
 
 ```javascript
 var config = {
@@ -371,7 +371,7 @@ var config = {
 }
 ```
 
-`props.children` contains the value after it has been transformed. To get the original value or any of the other row data, you can access it from the object `props.row`. `props.classes` will only be populated if you have set something for `field.classes`. Note, the root DOM element that you return from this React class **must** be a `<td/>`
+`props.children` contains the value after it has been transformed. You also have access to `props.rowNumber` and `props.colNumber` (both starting at 0). To get the original value or any of the other row data, you can access it from the object `props.row`. `props.classes` will only be populated if you have set something for `field.classes`. Note, the root DOM element that you return from this React class **must** be a `<td/>`
 
 #### 7. `field.tdInner` [ `React class` ]
 
@@ -396,7 +396,7 @@ var config = {
 
 #### 8. `field.thInner` [ `React class` ]
 
-This works the same as `field.tdInner` with a few differences. Props passed to the class include `name`, and `sort` (null, 'asc' or 'desc' depending on whether or not we're sorting on this column and the direction). `props.children` contains the `label`. If a `label` for this field wasn't supplied, but a name was, then it is calculated from the name. Here is an example where the column title is wrapped inside an anchor tag:
+This works the same as `field.tdInner` with a few differences. Props passed to the class include `name`, `colNumber` (no `rowNumber`) and `sort` (null, 'asc' or 'desc' depending on whether or not we're sorting on this column and the direction). `props.children` contains the `label`. If a `label` for this field wasn't supplied, but a name was, then it is calculated from the name. Here is an example where the column title is wrapped inside an anchor tag:
 
 ```javascript
 var config = {

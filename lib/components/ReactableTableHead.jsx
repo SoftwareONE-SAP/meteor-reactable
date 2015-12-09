@@ -12,22 +12,22 @@ ReactableTableHead = React.createClass({
   },
 
   render () {
-    let count = 0;
+    let colNumber = 0;
     const cells = this.props.fields.map(field => {
-      let column = count++;
-
+      const column = colNumber++;
       let sort = this.props.sort.column !== column ? null
                : this.props.sort.direction === 1   ? 'asc'
                : 'desc';
 
       return (
         <ReactableTableHeadCell
-          name    = { field.name      }
-          label   = { field.label     }
-          classes = { field.thClasses }
-          thInner = { field.thInner   }
-          onClick = { () => this.onCellClick(column) }
-          sort    = { sort }
+          colNumber = { column }
+          name      = { field.name      }
+          label     = { field.label     }
+          classes   = { field.thClasses }
+          thInner   = { field.thInner   }
+          onClick   = { () => this.onCellClick(column) }
+          sort      = { sort }
         />
       );
     });

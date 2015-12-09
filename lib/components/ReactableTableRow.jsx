@@ -13,15 +13,15 @@ ReactableTableRow = React.createClass({
   mixins: [ ReactableClasses ],
 
   propTypes: {
-    classes: ReactableTypeClasses,
-    tr:      React.PropTypes.func, // React class
-    fields:  React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    data:    React.PropTypes.object.isRequired,
-    count:   React.PropTypes.number.isRequired,
+    classes:   ReactableTypeClasses,
+    tr:        React.PropTypes.func, // React class
+    fields:    React.PropTypes.arrayOf(ReactableTypeField).isRequired,
+    data:      React.PropTypes.object.isRequired,
+    rowNumber: React.PropTypes.number.isRequired,
   },
 
   render () {
-
+    let colNumber = 0;
     const cells = this.props.fields.map(field => {
       let value;
 
@@ -63,17 +63,23 @@ ReactableTableRow = React.createClass({
 
       const TableCell = field.hasOwnProperty('td') ? field.td : ReactableTableCell;
 
+      let cellProps = {
+        row:       this.props.data,
+        rowNumber: this.props.rowNumber,
+        colNumber: colNumber++,
+      };
+
       if (field.hasOwnProperty('tdInner')) {
         const Inner = field.tdInner;
         value = (
-          <Inner row={ this.props.data }>
+          <Inner {...cellProps}>
             { value }
           </Inner>
         );
       }
 
       return (
-        <TableCell classes={ classes } row={ this.props.data }>
+        <TableCell { ...cellProps} classes={ classes }>
           { value }
         </TableCell>
       );
@@ -81,10 +87,10 @@ ReactableTableRow = React.createClass({
 
     const Row = this.props.tr || DefaultRow;
     return React.createElement(Row, {
-      classes: this.getClasses([this.props.classes]),
-      fields:  this.props.fields,
-      data:    this.props.data,
-      count:   this.props.count,
+      classes:   this.getClasses([this.props.classes]),
+      fields:    this.props.fields,
+      data:      this.props.data,
+      rowNumber: this.props.rowNumber,
     }, ...cells);
   },
 });

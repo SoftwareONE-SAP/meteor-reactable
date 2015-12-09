@@ -39,12 +39,12 @@ ReactableTable = React.createClass({
     let rows = this.props.rows.map(row => {
       return (
         <ReactableTableRow
-          key     = { row._id              }
-          tr      = { this.props.tr        }
-          classes = { this.props.trClasses }
-          fields  = { this.props.fields    }
-          data    = { row                  }
-          count   = { ++count              }
+          key       = { row._id              }
+          tr        = { this.props.tr        }
+          classes   = { this.props.trClasses }
+          fields    = { this.props.fields    }
+          data      = { row                  }
+          rowNumber = { count++              }
         />
       );
     });

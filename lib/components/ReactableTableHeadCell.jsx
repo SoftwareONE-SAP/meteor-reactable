@@ -1,14 +1,17 @@
+const T = React.PropTypes;
+
 ReactableTableHeadCell = React.createClass({
 
   mixins: [ ReactableClasses ],
 
   propTypes: {
-    name:     React.PropTypes.string,
-    label:    React.PropTypes.string,
-    classes:  ReactableTypeClasses,
-    thInner:  React.PropTypes.func, // React class
-    onClick:  React.PropTypes.func,
-    sort:     React.PropTypes.oneOf(['asc', 'desc']),
+    colNumber: T.number,
+    name:      T.string,
+    label:     T.string,
+    classes:   ReactableTypeClasses,
+    thInner:   T.func, // React class
+    onClick:   T.func,
+    sort:      T.oneOf(['asc', 'desc']),
   },
 
   getDefaultProps () {
@@ -24,8 +27,9 @@ ReactableTableHeadCell = React.createClass({
       const Component = this.props.thInner;
       inner = (
         <Component
-          name  = { this.props.name }
-          sort  = { this.props.sort }
+          name       = { this.props.name }
+          sort       = { this.props.sort }
+          colNumber = { this.props.colNumber }
         >{ this.props.label }</Component>
       );
     } else {
