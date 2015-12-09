@@ -8,6 +8,7 @@ ReactableTableHeadCell = React.createClass({
     classes:  ReactableTypeClasses,
     thInner:  React.PropTypes.func, // React class
     onClick:  React.PropTypes.func,
+    sort:     React.PropTypes.oneOf(['asc', 'desc']),
   },
 
   getDefaultProps () {
@@ -25,16 +26,22 @@ ReactableTableHeadCell = React.createClass({
       const Component = this.props.thInner;
       inner = (
         <Component
-          name  = { this.props.name }
+          name  = { this.props.name  }
           label = { this.props.label }
+          sort  = { this.props.sort  }
         >{ title }</Component>
       );
     } else {
       inner = title;
     }
 
+    const classes = this.getClasses([
+      this.props.sort ? ['sort', this.props.sort] : null,
+      this.props.classes,
+    ]);
+
     return (
-      <th className={ this.getClasses([this.props.classes]) } onClick={ this.onClick }>
+      <th className={ classes } onClick={ this.onClick }>
         { inner }
       </th>
     );

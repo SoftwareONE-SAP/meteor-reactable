@@ -41,7 +41,8 @@ ReactableTable = React.createClass({
     return (
       <table className={ this.getClasses([this.props.classes]) }>
         <ReactableTableHead
-          fields      = { this.props.fields    }
+          sort        = { this.props.sort }
+          fields      = { this.props.fields }
           onCellClick = { this.props.onHeadCellClick }
         />
         { rows }

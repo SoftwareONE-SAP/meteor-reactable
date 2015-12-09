@@ -1,15 +1,25 @@
+const T = React.PropTypes;
+
 ReactableTableHead = React.createClass({
 
   propTypes: {
-    fields:      React.PropTypes.arrayOf(ReactableTypeField).isRequired,
-    onCellClick: React.PropTypes.func,
+    sort: T.shape({
+      column:    T.number,
+      direction: T.oneOf([1, -1]),
+    }),
+    fields:      T.arrayOf(ReactableTypeField).isRequired,
+    onCellClick: T.func,
   },
 
   render () {
-
     let count = 0;
     const cells = this.props.fields.map(field => {
       let column = count++;
+
+      let sort = this.props.sort.column !== column ? null
+               : this.props.sort.direction === 1   ? 'asc'
+               : 'desc';
+
       return (
         <ReactableTableHeadCell
           name    = { field.name      }
@@ -17,6 +27,7 @@ ReactableTableHead = React.createClass({
           classes = { field.thClasses }
           thInner = { field.thInner   }
           onClick = { () => this.onCellClick(column) }
+          sort    = { sort }
         />
       );
     });

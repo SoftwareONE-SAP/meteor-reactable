@@ -346,7 +346,7 @@ var config = {
 
 #### 5. `field.thClasses` [ `String` | `Array` | `Function` ]
 
-Works the same as `field.tdClasses`, except it is applied to the table head `<th/>`. First argument for the function is the `field.name`, and second argument is the `field.label`
+Works the same as `field.tdClasses`, except it is applied to the table head `<th/>`. First argument for the function is the `field.name`, and second argument is the `field.label`. If this column is currently being sorted on a `sort` class is added and also either an `asc` or `desc` class depending on the sort direction.
 
 #### 6. `field.td` [ `React class` ]
 
@@ -396,7 +396,7 @@ var config = {
 
 #### 8. `field.thInner` [ `React class` ]
 
-This works the same as `field.tdInner` with a few differences. Props passed to the class include `name` and `label`. `props.children` contains the suggested title calculated from the label or a cleaned up version of the name. Here is an example where the column title is wrapped inside an anchor tag:
+This works the same as `field.tdInner` with a few differences. Props passed to the class include `name`, `label` and `sort` (null, 'asc' or 'desc' depending on whether or not we're sorting on this column and the direction). `props.children` contains the suggested title calculated from the label or a cleaned up version of the name. Here is an example where the column title is wrapped inside an anchor tag:
 
 ```javascript
 var config = {
