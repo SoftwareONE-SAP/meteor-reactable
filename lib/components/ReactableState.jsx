@@ -2,28 +2,36 @@ ReactableState = React.createClass({
 
   propTypes: ReactableConfigShape,
 
-  getInitialState () {
+  getDefaultProps () {
     return {
-      sort:     this.getInitialSortState(),
-      paginate: this.getInitialPaginationState(),
+      stateManager: DefaultStateManager,
     };
+  },
 
-    return state;
+  getInitialState () {
+    // This needs to exist so that DefaultStateManager can use this.state
+    return {};
   },
 
   render () {
 
     let props = { ...this.props };
     delete props.children;
+    delete props.stateManager;
 
-    props.sort = this.state.sort;
-
-    if (this.state.paginate) {
-      props.paginate            = this.state.paginate;
+    props.sort = this.getSort() || this.defaultSort();
+    if (this.props.paginate) {
+      props.paginate = {
+        limit: this.getLimit() || this.props.paginate.defaultLimit,
+        page:  this.getPage()  || this.props.paginate.defaultPage || 1,
+      };
+      if (this.props.paginate.ui) {
+        props.paginate.ui = this.props.paginate.ui;
+      }
       props.paginate.serverSide = this.props.paginate.serverSide,
       props.onChangePage        = this.onChangePage;
       props.onChangeLimit       = this.onChangeLimit;
-    }
+    };
 
     props.onHeadCellClick = this.onHeadCellClick;
 
@@ -32,8 +40,8 @@ ReactableState = React.createClass({
     );
   },
 
-  getInitialSortState () {
-    let defaultSort = null;
+  defaultSort () {
+    let defaultSort   = null;
     let firstSortable = null;
 
     let column = -1;
@@ -53,49 +61,98 @@ ReactableState = React.createClass({
       };
       return true;
     });
-
     return sort || firstSortable;
   },
 
-  getInitialPaginationState () {
-    let state = null;
-    if (this.props.paginate) {
-      state = {
-        page:  this.props.paginate.defaultPage || 1,
-        limit: this.props.paginate.defaultLimit,
-      };
-      if (this.props.paginate.ui) {
-        state.ui = this.props.paginate.ui;
+  get (k) {
+    return this.props.stateManager.get.call(this, k);
+  },
+
+  set (k, v) {
+    this.props.stateManager.set.call(this, k, v);
+  },
+
+  del (k) {
+    this.props.stateManager.del.call(this, k);
+  },
+
+  getLimit() {
+    let limit = parseInt(this.get('l'));
+    limit = isNaN(limit) ? this.props.paginate.limit : limit;
+    return limit && limit > 0 ? limit : null;
+  },
+
+  setLimit (limit) {
+    if (!this.props.paginate) return;
+    limit = parseInt(limit);
+    if (!isNaN(limit) && limit > 0) {
+      if (limit === this.props.paginate.defaultLimit) {
+        this.del('l');
+      } else {
+        this.set('l', limit);
       }
     }
-    return state;
+  },
+
+  getPage() {
+    let page = parseInt(this.get('p'));
+    page = isNaN(page) ? this.props.paginate.page : page;
+    return page && page > 0 ? page : null;
+  },
+
+  setPage (page) {
+    if (!this.props.paginate) return;
+    page = parseInt(page);
+    if (!isNaN(page) && page > 0) {
+      if (page === this.props.paginate.defaultPage) {
+        this.del('p');
+      } else {
+        this.set('p', page);
+      }
+    }
+  },
+
+  getSort () {
+    const sort = this.get('s');
+    if (typeof sort !== 'string') return null;
+    const matcher = sort.match(/^([0-9])+_(-?1)$/);
+    if (!matcher) return null;
+
+    const column    = parseInt(matcher[1]);
+    const direction = parseInt(matcher[2]);
+    if (column >= this.props.fields.length) return null;
+    if (!this.props.fields[ column ].sort) return null;
+
+    return { column, direction }
+  },
+
+  setSort (sort) {
+    this.set('s', sort.column + '_' + sort.direction);
   },
 
   onChangePage (num) {
     num = parseInt(num);
     if (isNaN(num) || num < 1) num = 1;
-
-    let paginate = { ...this.state.paginate };
-    paginate.page = num;
-    this.setState({ paginate });
+    this.setPage(num);
   },
 
-  onChangeLimit (num) {
-    num = parseInt(num);
-    if (isNaN(num) || num < 1) num = 1;
-
-    let paginate = { ...this.state.paginate };
+  onChangeLimit (limit) {
+    limit = parseInt(limit);
+    if (isNaN(limit) || limit < 1) limit = 1;
 
     /**
      * When we change the limit, do some magic to recalculate the page
      * number we're viewing too so that the top row on the old page
      * still exists somewhere on the new page.
      */
-    let top_row    = ((paginate.limit * (paginate.page - 1)) + 1);
-    paginate.page  = Math.ceil(top_row / num);
-    paginate.limit = num;
+    let page       = this.getPage();
+    let top_row    = ((limit * (page - 1)) + 1);
 
-    this.setState({ paginate });
+    let newPage = Math.ceil(top_row / limit);
+    this.setLimit(limit);
+    if (newPage !== page) {
+      this.setPage(newPage);
+    }
   },
 
   onHeadCellClick (column) {
@@ -104,7 +161,7 @@ ReactableState = React.createClass({
     if (!field.sort) return;
 
     let sort_spec = field.sort;
-    let sort      = this.state.sort || {};
+    let sort      = this.getSort() || {};
 
     if (sort.column === column) {
       sort.direction *= -1;
@@ -113,7 +170,7 @@ ReactableState = React.createClass({
       sort.direction = sort_spec.direction || 1;
     }
 
-    this.setState({ sort });
+    this.setSort(sort);
   },
 
 });

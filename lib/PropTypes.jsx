@@ -61,4 +61,9 @@ ReactableConfigShape = {
       serverSide:   T.object, // Stats collection
     }),
   ]),
+  stateManager: T.shape({
+    get: T.func,
+    set: T.func,
+    del: T.func,
+  }),
 };

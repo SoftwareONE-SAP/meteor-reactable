@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   ], 'client');
 
   api.addFiles([
+    'lib/DefaultStateManager.jsx',
     'lib/PropTypes.jsx',
     'lib/mixins/ReactableClasses.jsx',
     'lib/components/Reactable.jsx',
