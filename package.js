@@ -9,11 +9,11 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.3');
 
-  api.use('react');
+  api.use('react@=0.1.0');
 
   api.use([
-    'react-meteor-data',
-    'react-template-helper',
+    'react-meteor-data@=0.1.5',
+    'react-template-helper@=0.1.2',
     'templating',
   ], 'client');
 
