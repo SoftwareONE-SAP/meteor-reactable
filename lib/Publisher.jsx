@@ -28,7 +28,7 @@ Reactable.publish = function (name, options, func) {
     const statHandle = () => {
       let count = 0;
       let initializing = true;
-      const handle = collection.find(selector).observeChanges({
+      const handle = collection.find(selector, { fields: { _id: 1 } }).observeChanges({
         added: () => {
           ++count;
           if (!initializing) this.changed(stats_name, 'stats', { count });
