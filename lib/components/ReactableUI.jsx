@@ -2,6 +2,10 @@ ReactableUI = React.createClass({
 
   mixins: [ ReactableClasses ],
 
+  shouldComponentUpdate (nextProps) {
+    return nextProps.ready;
+  },
+
   render () {
 
     const classes = this.getClasses(['reactable', this.props.classes]);
