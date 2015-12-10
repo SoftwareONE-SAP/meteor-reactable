@@ -646,27 +646,49 @@ Then on the client side, the data will actually be written to a collection named
 
 #### Managing State
 
-Reactable tables have a state which is stored internally. That contains information regarding the current sort column and direction, and pagination information. If you want to be able to persist this information, for example you want to store and retrieve it from a URL query string, all you need to do is supply the table with a State Manager. A State Manager is a simple `Object` of your creation with get, set and del functions. The default state manager simple stores and retrieves data from an internal React state and looks like this:
+Reactable tables have a state which is stored internally. That contains information regarding the current sort column and direction, and pagination information. If you want to be able to persist this information, for example you want to store and retrieve it from a URL query string, all you need to do is supply the table with a State Manager. A State Manager is a `Function` which returns a simple `Object` of your creation with `get`, `set` and `del` functions. The State Manager function is called once when the table is initially rendered. The default state manager simple stores and retrieves data from an internal React state and looks like this:
 
 ```javascript
-DefaultStateManager = {
-  get (k) {
-    return this.state[ k ];
-  },
-  set (k, v) {
-    let state = {};
-    state[ k ] = v;
-    this.setState(state);
-  },
-  del (k) {
-    let state = {};
-    state[ k ] = null;
-    this.setState(state);
-  },
+DefaultStateManager = function () {
+  return {
+    get (k) {
+      return this.state[ k ];
+    },
+    set (k, v) {
+      let state = {};
+      state[ k ] = v;
+      this.setState(state);
+    },
+    del (k) {
+      let state = {};
+      state[ k ] = null;
+      this.setState(state);
+    },
+  };
 };
 ```
 
-If you want to replace that with your own State Manager, then set it at `config.stateManager`.
+`this` refers to the `ReactableState` component which is why `setState` works. In the above example, `setState` triggers React to re-render the component; if your state manager doesn't trigger React to re-render on it's own, you can add a `track` item to the object with a value of `true` and React will re-render after each `set` or `del` is called.
+
+To use your state manager, you simply set it at `config.stateManager`. Another example where you simply store the state data in a simple JavaScript `Object` would be:
+
+```javascript
+StateManager = function () {
+  var state = {};
+  return {
+    track: true,
+    get (k) {
+      return state[ k ];
+    },
+    set (k, v) {
+      state[ k ] = v;
+    },
+    del (k) {
+      delete state[ k ];
+    },
+  };
+};
+```
 
 ## Global Configuration
 

@@ -2,6 +2,8 @@ ReactableState = React.createClass({
 
   propTypes: ReactableConfigShape,
 
+  mixins: [ ReactMeteorData ],
+
   getDefaultProps () {
     return {
       stateManager: DefaultStateManager,
@@ -9,12 +11,23 @@ ReactableState = React.createClass({
   },
 
   getInitialState () {
-    // This needs to exist so that DefaultStateManager can use this.state
+    let state = {
+      stateManager: this.props.stateManager(),
+    };
+    if (state.stateManager.track) {
+      state.stateDependency = new Tracker.Dependency();
+    }
+    return state;
+  },
+
+  getMeteorData () {
+    if (this.state.stateDependency) {
+      this.state.stateDependency.depend();
+    }
     return {};
   },
 
   render () {
-
     let props = { ...this.props };
     delete props.children;
     delete props.stateManager;
@@ -65,15 +78,21 @@ ReactableState = React.createClass({
   },
 
   get (k) {
-    return this.props.stateManager.get.call(this, k);
+    return this.state.stateManager.get.call(this, k);
   },
 
   set (k, v) {
-    this.props.stateManager.set.call(this, k, v);
+    this.state.stateManager.set.call(this, k, v);
+    if (this.state.stateDependency) {
+      this.state.stateDependency.changed();
+    }
   },
 
   del (k) {
-    this.props.stateManager.del.call(this, k);
+    this.state.stateManager.del.call(this, k);
+    if (this.state.stateDependency) {
+      this.state.stateDependency.changed();
+    }
   },
 
   getLimit() {
