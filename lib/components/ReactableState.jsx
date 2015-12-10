@@ -180,7 +180,7 @@ ReactableState = React.createClass({
     if (!field.sort) return;
 
     let sort_spec = field.sort;
-    let sort      = this.getSort() || {};
+    let sort      = this.getSort() || this.defaultSort();
 
     if (sort.column === column) {
       sort.direction *= -1;
