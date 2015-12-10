@@ -67,6 +67,7 @@ ReactableTableRow = React.createClass({
         row:       this.props.row,
         rowNumber: this.props.rowNumber,
         colNumber: colNumber++,
+        label:     field.label,
       };
 
       if (field.hasOwnProperty('tdInner')) {
