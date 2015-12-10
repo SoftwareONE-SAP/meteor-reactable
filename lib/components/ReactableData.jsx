@@ -27,9 +27,9 @@ ReactableData = React.createClass({
       data.totalRows = collection.find(selector).count();
     }
 
-    data.rows = collection.find(selector, this.queryOptions()).fetch();
+    data.rows = collection.find(selector, this.queryOptions(data.totalRows)).fetch();
     data.rows = this.sort(data.rows);
-    data.rows = this.paginate(data.rows);
+    data.rows = this.paginate(data.rows, data.totalRows);
 
     return data;
   },
@@ -66,10 +66,9 @@ ReactableData = React.createClass({
 
     // Pass-through all props and reactive data as props, except for
     // props.source which is not needed outside of this component.
-    let props = { ...this.props };
+    let props = { ...this.props, ...this.data };
     delete props.children;
     delete props.source;
-    Object.keys(data).forEach(k => props[ k ] = data[ k ]);
 
     // Pagination info
     if (props.paginate) {
@@ -179,7 +178,7 @@ ReactableData = React.createClass({
   /**
    * Returns options to be used in the Mongo query
    */
-  queryOptions () {
+  queryOptions (totalRows) {
     let options = {
       fields: this.fields(),
     };
@@ -194,6 +193,10 @@ ReactableData = React.createClass({
 
     if (this.queryPagination()) {
       let { limit, page } = this.props.paginate;
+      if (totalRows) {
+        const maxPage = Math.ceil(Math.max(totalRows,1) / limit);
+        page = Math.min(page, maxPage);
+      }
       options.limit = limit;
       options.skip  = limit * ( page - 1 );
     }
@@ -266,11 +269,17 @@ ReactableData = React.createClass({
    * Client side pagination. Triggered for non-reactive data sources
    * and reactive data sources with a custom sorting function
    */
-  paginate (rows) {
+  paginate (rows, totalRows) {
     if (this.jsPagination()) {
       const spec  = this.props.paginate;
       const limit = spec.limit;
-      const page  = spec.page;
+      let   page  = spec.page;
+
+      if (totalRows) {
+        const maxPage = Math.ceil(Math.max(totalRows,1) / limit);
+        page = Math.min(page, maxPage);
+      }
+
       rows = rows.splice(limit * ( page - 1 ), limit);
     } else if (this.serverSidePagination()){
       /**

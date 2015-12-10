@@ -19,29 +19,37 @@ Reactable.publish = function (name, options, func) {
     const collection = res.collection;
     const selector   = res.selector || {};
 
+    // Keep a count of the total number of matching rows for pargination
+    // purposes
+    let totalRows = 0;
+    const statHandle = () => {
+      let initializing = true;
+      const handle = collection.find(selector, { fields: { _id: 1 } }).observeChanges({
+        added: () => {
+          ++totalRows;
+          if (!initializing) this.changed(stats_name, 'stats', { count: totalRows });
+        },
+        removed: () => {
+          --totalRows;
+          if (!initializing) this.changed(stats_name, 'stats', { count: totalRows });
+        }
+      });
+      this.added(stats_name, 'stats', { count: totalRows });
+      initializing = false;
+      return handle;
+    }();
+
     if (res.options) {
       options = { ...options, ...res.options };
     }
 
-    // Keep a count of the total number of matching rows for pargination
-    // purposes
-    const statHandle = () => {
-      let count = 0;
-      let initializing = true;
-      const handle = collection.find(selector, { fields: { _id: 1 } }).observeChanges({
-        added: () => {
-          ++count;
-          if (!initializing) this.changed(stats_name, 'stats', { count });
-        },
-        removed: () => {
-          --count;
-          if (!initializing) this.changed(stats_name, 'stats', { count });
-        }
-      });
-      this.added(stats_name, 'stats', { count });
-      initializing = false;
-      return handle;
-    }();
+    // If skip value is too high, then drop it to the highest
+    // it is allowed to be.
+    if (options.limit && options.skip) {
+      const maxPage = Math.ceil(Math.max(1, totalRows) / options.limit);
+      const maxSkip = (maxPage - 1) * options.limit;
+      options.skip = Math.min(maxSkip, options.skip);
+    }
 
     const dataHandle = collection.find(selector, options).observeChanges({
       added:   (id, fields) => this.added(col_name, id, fields),
