@@ -37,14 +37,19 @@ ReactableTable = React.createClass({
 
     let count = 0;
     let rows = this.props.rows.map(row => {
+      const classes = [
+        'row',
+        count % 2 ? 'even' : 'odd',
+        this.props.trClasses,
+      ];
       return (
         <ReactableTableRow
-          key       = { row._id              }
-          tr        = { this.props.tr        }
-          classes   = { this.props.trClasses }
-          fields    = { this.props.fields    }
-          row       = { row                  }
-          rowNumber = { count++              }
+          key       = { row._id           }
+          tr        = { this.props.tr     }
+          classes   = { classes           }
+          fields    = { this.props.fields }
+          row       = { row               }
+          rowNumber = { count++           }
         />
       );
     });

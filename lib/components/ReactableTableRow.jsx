@@ -13,6 +13,13 @@ ReactableTableRow = React.createClass({
   mixins: [ ReactableClasses ],
 
   propTypes: {
+    row: React.PropTypes.oneOfType([
+      React.PropTypes.number,
+      React.PropTypes.string,
+      React.PropTypes.array,
+      React.PropTypes.func,
+      React.PropTypes.object,
+    ]),
     classes:   ReactableTypeClasses,
     tr:        React.PropTypes.func, // React class
     fields:    React.PropTypes.arrayOf(ReactableTypeField).isRequired,
