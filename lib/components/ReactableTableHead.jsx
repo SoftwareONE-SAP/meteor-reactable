@@ -15,7 +15,8 @@ ReactableTableHead = React.createClass({
     let colNumber = 0;
     const cells = this.props.fields.map(field => {
       const column = colNumber++;
-      let sort = this.props.sort.column !== column ? null
+      let sort = !this.props.sort                  ? null
+               : this.props.sort.column !== column ? null
                : this.props.sort.direction === 1   ? 'asc'
                : 'desc';
 
