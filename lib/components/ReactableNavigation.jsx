@@ -1,18 +1,18 @@
 ReactableNavigation = React.createClass({
 
   propTypes: {
-    totalRows:   React.PropTypes.number,
-    pages:       React.PropTypes.number,
-    limit:       React.PropTypes.number.isRequired,
-    page:        React.PropTypes.number.isRequired,
-    changeLimit: React.PropTypes.func.isRequired,
-    changePage:  React.PropTypes.func.isRequired,
-    ui:          React.PropTypes.func, // React class
-    hasMore:     React.PropTypes.bool.isRequired,
+    totalRows:    React.PropTypes.number,
+    pages:        React.PropTypes.number,
+    page:         React.PropTypes.number.isRequired,
+    limit:        React.PropTypes.number.isRequired,
+    defaultLimit: React.PropTypes.number.isRequired,
+    changeLimit:  React.PropTypes.func.isRequired,
+    changePage:   React.PropTypes.func.isRequired,
+    ui:           React.PropTypes.func, // React class
+    hasMore:      React.PropTypes.bool.isRequired,
   },
 
   render () {
-
     const UI = this.props.ui || ReactableNavigationUI;
 
     let props = { ...this.props };
