@@ -23,6 +23,7 @@ ReactableTypeField = T.shape({
       default:   T.bool,
       custom:    T.func,
       transform: T.bool,
+      field:     T.string,
     }),
   ]),
 });

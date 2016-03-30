@@ -508,6 +508,21 @@ var config = {
 
 Inside your sorting function, you can access other columns of data from the two corresponding rows. In the above example, `a` can also be retrieved from `this.row[0].last_name` and `b` from `this.row[1].last_name`.
 
+If you wish to change the field that is used for sorting, you can set `sort.field`. In the following example, data from the `first_name` field is displayed, but sorting is performed on the `lc_first_name` field instead.
+
+```javascript
+var config = {
+  fields: [
+    {
+      name: 'first_name',
+      sort: {
+        field: 'lc_first_name',
+      }
+    }
+  ]
+}
+```
+
 ### `config.tr` [ `React class` ]
 
 The default React class for a `<tr/>` is:

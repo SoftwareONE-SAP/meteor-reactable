@@ -191,8 +191,9 @@ ReactableData = React.createClass({
     if (this.querySorting()) {
       const { direction, column } = this.props.sort;
       const field = this.props.fields[ column ];
+      const name = field.sort.field || field.name;
       let sort = {};
-      sort[ field.name ] = direction;
+      sort[ name ] = direction;
       options.sort = sort;
     }
 
@@ -221,8 +222,9 @@ ReactableData = React.createClass({
 
       const { direction, column } = this.props.sort;
       const field = this.props.fields[ column ];
+      const name = field.sort.field || field.name;
       options.sort = {};
-      options.sort[ field.name ] = direction;
+      options.sort[ name ] = direction;
     }
 
     return options;
@@ -230,7 +232,8 @@ ReactableData = React.createClass({
 
   fields () {
     let fields = this.props.fields.reduce((obj, field) => {
-      if (field.hasOwnProperty('name')) obj[ field.name ] = 1;
+      if (field.hasOwnProperty('name'))   obj[ field.name       ] = 1;
+      if (field.sort && field.sort.field) obj[ field.sort.field ] = 1;
       return obj;
     }, {});
     if (this.props.source.hasOwnProperty('fields')) {
@@ -249,11 +252,13 @@ ReactableData = React.createClass({
     const { direction, column } = this.props.sort;
     const field = this.props.fields[ column ];
 
-    rows = rows.sort((row1, row2) => {
-      let a = row1[ field.name ];
-      let b = row2[ field.name ];
+    const name = field.sort.field || field.name;
 
-      if ((field.sort.transform || !field.name) && field.transform) {
+    rows = rows.sort((row1, row2) => {
+      let a = row1[ name ];
+      let b = row2[ name ];
+
+      if ((field.sort.transform || !name) && field.transform) {
         a = field.transform.call({ row: row1 }, a);
         b = field.transform.call({ row: row2 }, b);
       }
@@ -319,7 +324,8 @@ ReactableData = React.createClass({
     if (!this.props.isReactive) return false;
     const { direction, column } = this.props.sort;
     const field = this.props.fields[ column ];
-    if (!field.name)          return false;
+    const name = field.sort.field || field.name;
+    if (!name) return false;
     if (field.sort.transform) return false;
     if (field.sort.custom)    return false;
     return true;
@@ -330,7 +336,8 @@ ReactableData = React.createClass({
     if (!this.props.isReactive) return true;
     const { direction, column } = this.props.sort;
     const field = this.props.fields[ column ];
-    return !!(!field.name || field.sort.transform || field.sort.custom);
+    const name = field.sort.field || field.name;
+    return !!(!name || field.sort.transform || field.sort.custom);
   },
 
 });
