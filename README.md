@@ -217,6 +217,41 @@ Whenever Reactable subscribes to a publication, it appends an additional argumen
 
 It will always contain `options.fields` which is a list of data which this particular table requires. `sort`, `skip` and `limit` are only passed when `config.paginate.serverSide` is enabled. `Reactable.publish` automates validation and use of much of this data.
 
+Perhaps you don't want that information added, or you want it added differently. For that, you can define `source.subscribe.additionalArgs`.
+Here is what the default looks like:
+
+```javascript
+var config = {
+  source: {
+    subscribe: function () {
+      additionalArgs: function (original, additional) {
+        return [].concat(original).concat(additional);
+      }
+    }
+  }
+}
+```
+
+Say you know that there is only going to be one argument passed, and it
+will be an object, and you want to merge skip, limit and sort only into it:
+
+```javascript
+var config = {
+  source: {
+    subscribe: function () {
+      additionalArgs: function (original, additional) {
+        ['skip', 'limit', 'sort'].forEach(function(key){
+          original[ 0 ][ key ] = additional.options[ key ];
+        });
+        return original;
+      }
+    }
+  }
+}
+```
+
+The downside to doing this is that the `Reactable.publish` helper function will no longer automatically work.
+
 ### `config.source.fields` [ `Array` ]
 
 This optional array contains a list of document keys which we wish to have access to. As with MongoDB you also get the _id. If the collection is an `Array` of `Objects` rather than a Mongo collection and an _id doesn't exist, a fake one is added. Any key which has an entry in `config.fields` (discussed next) will automatically be in this list, so usually you don't need to specify it. One example of when you might need this functionality:
@@ -643,36 +678,6 @@ Reactable.publish('wibble', function (){
 ```
 
 Then on the client side, the data will actually be written to a collection named "wibble", and the stats to a collection named "wibble/stats". With Meteor.publish, this data would have been written to the "people" collection on the client side.
-
-#### `config.paginate.serverSideArgs` [ `Function` ]
-
-Perhaps you don't like the way that the pagination information for a subscription with `config.paginate.serverSide` sent to the server. You can override that as follows:
-
-```javascript
-config = {
-  paginate: {
-    serverSideArgs: function (origArgs, paginationArgs) {
-      origArgs.push(paginationArgs);
-      return origArgs;
-    }
-  },
-}
-```
-
-The above example is the default behaviour for serverSideArgs if you don't specify it yourself. It will add the `limit`, `skip`, `sort`, and `fields` options as an additional subscription argument. If you know that there will only be a single argument, and it will be an object, and the only pagination argument you want to send to the subscription is `limit`, you could for example do:
-
-```javascript
-config = {
-  paginate: {
-    serverSideArgs: function (origArgs, paginationArgs) {
-      origArgs[0].limit = paginationArgs.options.limit;
-      return origArgs;
-    }
-  },
-}
-```
-
-Of course, this is incompatible with Reactable.publish.
 
 #### Managing State
 

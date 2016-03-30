@@ -39,7 +39,6 @@ ReactableState = React.createClass({
         page:  this.getPage()  || this.props.paginate.defaultPage || 1,
         defaultLimit:   this.props.paginate.defaultLimit,
         serverSide:     this.props.paginate.serverSide,
-        serverSideArgs: this.props.paginate.serverSideArgs,
       };
       if (this.props.paginate.ui) {
         props.paginate.ui = this.props.paginate.ui;

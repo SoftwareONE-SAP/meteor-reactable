@@ -38,6 +38,7 @@ ReactableTypeSource = T.shape({
       name:    T.string.isRequired,
       context: T.object, // Meteor or a DDP connection
       args:    T.oneOfType([ T.array, T.func ]),
+      additionalArgs: T.func,
     }),
   ]),
 });
@@ -59,7 +60,6 @@ ReactableConfigShape = {
       defaultPage:    T.number,
       defaultLimit:   T.number.isRequired,
       serverSide:     T.object, // Stats collection
-      serverSideArgs: T.func,
     }),
   ]),
   stateManager: T.func,

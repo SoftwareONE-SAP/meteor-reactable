@@ -134,10 +134,15 @@ ReactableData = React.createClass({
 
     let context, name, args;
 
+    let additionalArgs = (orig, additional) => {
+      return [].concat(orig).concat(additional);
+    };
+
     if (typeof subscribe === 'object') {
       context = subscribe.context || Meteor;
       name    = subscribe.name;
       args    = subscribe.args || [];
+      additionalArgs = subscribe.additionalArgs || additionalArgs;
       if (typeof args === 'function') {
         args = args.call(this);
       }
@@ -157,11 +162,7 @@ ReactableData = React.createClass({
       if (!Array.isArray(args)) {
         args = [ args ];
       }
-      if (this.props.paginate && this.props.paginate.serverSideArgs) {
-        args = this.props.paginate.serverSideArgs(args, arg);
-      } else {
-        args.push(arg);
-      }
+      args = additionalArgs(args, arg);
     }();
 
     return context.subscribe.call(context, name, ...args);
