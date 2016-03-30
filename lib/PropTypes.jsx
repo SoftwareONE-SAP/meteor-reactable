@@ -55,10 +55,11 @@ ReactableConfigShape = {
   paginate:          T.oneOfType([
     T.number,
     T.shape({
-      ui:           T.func, // React classes
-      defaultPage:  T.number,
-      defaultLimit: T.number.isRequired,
-      serverSide:   T.object, // Stats collection
+      ui:             T.func, // React classes
+      defaultPage:    T.number,
+      defaultLimit:   T.number.isRequired,
+      serverSide:     T.object, // Stats collection
+      serverSideArgs: T.func,
     }),
   ]),
   stateManager: T.func,

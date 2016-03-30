@@ -157,7 +157,11 @@ ReactableData = React.createClass({
       if (!Array.isArray(args)) {
         args = [ args ];
       }
-      args.push(arg);
+      if (this.props.paginate && this.props.paginate.serverSideArgs) {
+        args = this.props.paginate.serverSideArgs(args, arg);
+      } else {
+        args.push(arg);
+      }
     }();
 
     return context.subscribe.call(context, name, ...args);

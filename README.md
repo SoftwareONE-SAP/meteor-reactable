@@ -644,6 +644,36 @@ Reactable.publish('wibble', function (){
 
 Then on the client side, the data will actually be written to a collection named "wibble", and the stats to a collection named "wibble/stats". With Meteor.publish, this data would have been written to the "people" collection on the client side.
 
+#### `config.paginate.serverSideArgs` [ `Function` ]
+
+Perhaps you don't like the way that the pagination information for a subscription with `config.paginate.serverSide` sent to the server. You can override that as follows:
+
+```javascript
+config = {
+  paginate: {
+    serverSideArgs: function (origArgs, paginationArgs) {
+      origArgs.push(paginationArgs);
+      return origArgs;
+    }
+  },
+}
+```
+
+The above example is the default behaviour for serverSideArgs if you don't specify it yourself. It will add the `limit`, `skip`, `sort`, and `fields` options as an additional subscription argument. If you know that there will only be a single argument, and it will be an object, and the only pagination argument you want to send to the subscription is `limit`, you could for example do:
+
+```javascript
+config = {
+  paginate: {
+    serverSideArgs: function (origArgs, paginationArgs) {
+      origArgs[0].limit = paginationArgs.options.limit;
+      return origArgs;
+    }
+  },
+}
+```
+
+Of course, this is incompatible with Reactable.publish.
+
 #### Managing State
 
 Reactable tables have a state which is stored internally. That contains information regarding the current sort column and direction, and pagination information. If you want to be able to persist this information, for example you want to store and retrieve it from a URL query string, all you need to do is supply the table with a State Manager. A State Manager is a `Function` which returns a simple `Object` of your creation with `get`, `set` and `del` functions. The State Manager function is called once when the table is initially rendered. The default state manager simple stores and retrieves data from an internal React state and looks like this:

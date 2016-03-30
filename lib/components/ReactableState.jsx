@@ -37,14 +37,15 @@ ReactableState = React.createClass({
       props.paginate = {
         limit: this.getLimit() || this.props.paginate.defaultLimit,
         page:  this.getPage()  || this.props.paginate.defaultPage || 1,
-        defaultLimit: this.props.paginate.defaultLimit,
+        defaultLimit:   this.props.paginate.defaultLimit,
+        serverSide:     this.props.paginate.serverSide,
+        serverSideArgs: this.props.paginate.serverSideArgs,
       };
       if (this.props.paginate.ui) {
         props.paginate.ui = this.props.paginate.ui;
       }
-      props.paginate.serverSide = this.props.paginate.serverSide,
-      props.onChangePage        = this.onChangePage;
-      props.onChangeLimit       = this.onChangeLimit;
+      props.onChangePage  = this.onChangePage;
+      props.onChangeLimit = this.onChangeLimit;
     };
 
     props.onHeadCellClick = this.onHeadCellClick;
