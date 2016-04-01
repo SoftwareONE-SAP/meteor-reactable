@@ -14,6 +14,19 @@ ReactableUI = React.createClass({
       this.props.ready ? null : 'loading',
     ]);
 
+    if (this.props.rows.length === 0 && this.props.ready && this.props.empty) {
+      let Component      = this.props.empty.body;
+      let ComponentProps = this.props.empty.props;
+      if (typeof ComponentProps === 'function') {
+        ComponentProps = ComponentProps.call(this);
+      }
+      return (
+        <div id={ this.props.id } className={ classes }>
+          <Component { ...this.props } { ...ComponentProps }/>
+        </div>
+      );
+    }
+
     return (
       <div id={ this.props.id } className={ classes }>
         <ReactableTable { ...this.tableProps() }/>

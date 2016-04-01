@@ -570,6 +570,30 @@ Yes, it is perfectly valid to have multiple `<tbody/>` in a single table. Unfort
 
 As described in `config.tr`, all table rows are wrapped in a `<tbody/>` by default. If you want to remove this, set `config.addTbody` to `false`. The main reason you would use this is if you're overriding the default `<tr/>` component using `config.tr` and returning a `<tbody/>` rather than a `<tr/>`.
 
+### `config.empty` [ `Object` ]
+
+There are times when you want to display something else when the table is empty. If you wish to do this, you need to supply a React component class to display and an object containing a list of properties to pass to that class:
+
+```javascript
+
+var Empty = React.createClass({
+  render () {
+    return (
+      <div>No results: { this.props.msg }</div>
+    );
+  }
+});
+
+var config = {
+  empty: {
+    body:  Empty,
+    props: { msg: 'Something' },
+  }
+}
+```
+
+If `config.empty.props` is a `function` rather than an `object`, it will be run each time the component is rendered.
+
 ### `config.paginate` [ `Object` | `Number` ]
 
 You can add pagination to your table as simply as:

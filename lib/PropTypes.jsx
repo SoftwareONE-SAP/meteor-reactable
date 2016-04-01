@@ -64,4 +64,8 @@ ReactableConfigShape = {
     }),
   ]),
   stateManager: T.func,
+  empty: T.shape({
+    body:  T.func, // React classes
+    props: T.oneOfType([ T.func, T.object ]),
+  }),
 };
