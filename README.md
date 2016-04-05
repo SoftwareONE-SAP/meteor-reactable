@@ -252,6 +252,12 @@ var config = {
 
 The downside to doing this is that the `Reactable.publish` helper function will no longer automatically work.
 
+### config.source.ready [ `ReactiveVar` ]
+
+When Reactable has access to the subscription behind the data it is displaying, it knows when the subscription is "ready". Using this information it adds a "loading" class to the root of the component.
+
+If you want this functionality when Reactable does not have access to the subscription, e.g if the source is an array, you can use `source.ready`. This takes a ReactiveVar as a value. That ReactiveVar resolves to `true` when the data is "ready", and `false` when it is not.
+
 ### `config.source.fields` [ `Array` ]
 
 This optional array contains a list of document keys which we wish to have access to. As with MongoDB you also get the _id. If the collection is an `Array` of `Objects` rather than a Mongo collection and an _id doesn't exist, a fake one is added. Any key which has an entry in `config.fields` (discussed next) will automatically be in this list, so usually you don't need to specify it. One example of when you might need this functionality:

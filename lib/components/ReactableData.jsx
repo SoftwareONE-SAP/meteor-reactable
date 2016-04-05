@@ -10,11 +10,19 @@ ReactableData = React.createClass({
     const source     = this.props.source;
     const collection = source.collection;
 
-    if (!this.props.isReactive) return {};
+    let data = {};
 
-    let data = {
-      ready: this.subscribe().ready(),
-    };
+    if (source.hasOwnProperty('ready')) {
+      data.ready = source.ready.get();
+    }
+
+    if (!this.props.isReactive) return data;
+
+    (sub => {
+      if (!data.hasOwnProperty('ready')) {
+        data.ready = sub.ready();
+      }
+    })(this.subscribe());
 
     let statsCollection = this.serverSidePagination();
 
@@ -43,7 +51,7 @@ ReactableData = React.createClass({
     }
 
     let data = {
-      ready: true,
+      ready: this.data.hasOwnProperty('ready') ? this.data.ready : true,
       totalRows: collection.length,
     };
 

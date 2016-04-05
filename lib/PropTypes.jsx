@@ -42,6 +42,7 @@ ReactableTypeSource = T.shape({
       additionalArgs: T.func,
     }),
   ]),
+  ready: T.Object,
 });
 
 ReactableConfigShape = {
