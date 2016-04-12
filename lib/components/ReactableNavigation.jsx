@@ -6,8 +6,7 @@ ReactableNavigation = React.createClass({
     page:         React.PropTypes.number.isRequired,
     limit:        React.PropTypes.number.isRequired,
     defaultLimit: React.PropTypes.number.isRequired,
-    changeLimit:  React.PropTypes.func.isRequired,
-    changePage:   React.PropTypes.func.isRequired,
+    setPaginate:  React.PropTypes.func.isRequired,
     ui:           React.PropTypes.func, // React class
     hasMore:      React.PropTypes.bool.isRequired,
   },
@@ -29,7 +28,7 @@ ReactableNavigation = React.createClass({
   changePage (newPage) {
     newPage = parseInt(newPage);
     if (isNaN(newPage) || newPage < 1) return;
-    this.props.changePage(newPage);
+    this.props.setPaginate({ page: newPage });
   },
   nextPage () {
     this.changePage(this.props.page + 1);
@@ -102,12 +101,12 @@ ReactableNavigationUI = React.createClass({
 
   onPageKeyPress (e) {
     if (e.which !== 13) return; // Enter key
-    this.props.changePage(this.pageDom().value);
+    this.props.setPaginate({ page: this.pageDom().value });
   },
 
   onLimitKeyPress (e) {
     if (e.which !== 13) return; // Enter key
-    this.props.changeLimit(this.limitDom().value);
+    this.props.setPaginate({ limit: this.limitDom().value });
   },
 
   onPageBlur () {

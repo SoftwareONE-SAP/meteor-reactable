@@ -51,8 +51,7 @@ ReactableUI = React.createClass({
 
   navigationProps () {
     let props = { ...this.props.paginate };
-    props.changePage  = this.props.onChangePage;
-    props.changeLimit = this.props.onChangeLimit;
+    props.setPaginate = this.props.onChangePaginate;
     return props;
   },
 

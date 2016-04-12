@@ -43,8 +43,7 @@ ReactableState = React.createClass({
       if (this.props.paginate.ui) {
         props.paginate.ui = this.props.paginate.ui;
       }
-      props.onChangePage  = this.onChangePage;
-      props.onChangeLimit = this.onChangeLimit;
+      props.onChangePaginate = this.setPaginate;
     };
 
     props.onHeadCellClick = this.onHeadCellClick;
@@ -82,15 +81,8 @@ ReactableState = React.createClass({
     return this.state.stateManager.get.call(this, k);
   },
 
-  set (k, v) {
-    this.state.stateManager.set.call(this, k, v);
-    if (this.state.stateDependency) {
-      this.state.stateDependency.changed();
-    }
-  },
-
-  del (k) {
-    this.state.stateManager.del.call(this, k);
+  set (o) {
+    this.state.stateManager.set.call(this, o);
     if (this.state.stateDependency) {
       this.state.stateDependency.changed();
     }
@@ -102,33 +94,44 @@ ReactableState = React.createClass({
     return limit && limit > 0 ? limit : null;
   },
 
-  setLimit (limit) {
-    if (!this.props.paginate) return;
-    limit = parseInt(limit);
-    if (!isNaN(limit) && limit > 0) {
-      if (limit === this.props.paginate.defaultLimit) {
-        this.del('l');
-      } else {
-        this.set('l', limit);
-      }
-    }
-  },
-
   getPage() {
     let page = parseInt(this.get('p'));
     page = isNaN(page) ? this.props.paginate.page : page;
     return page && page > 0 ? page : null;
   },
 
-  setPage (page) {
+  setPaginate (opt) {
     if (!this.props.paginate) return;
-    page = parseInt(page);
-    if (!isNaN(page) && page > 0) {
-      if (page === this.props.paginate.defaultPage) {
-        this.del('p');
-      } else {
-        this.set('p', page);
-      }
+    limit = parseInt(opt.limit);
+    page  = parseInt(opt.page);
+    if (isNaN(limit) || limit < 1) limit = null;
+    if (isNaN(page)  || page  < 1) page  = null;
+    let changes = {};
+    if (opt.limit) changes.l = limit;
+    if (opt.page)  changes.p = page;
+
+    /**
+     * Delete defaults from the stateManager
+     */
+    const { defaultPage=1, defaultLimit } = this.props.paginate;
+    if (changes.p === defaultPage)  changes.p = null;
+    if (changes.l === defaultLimit) changes.l = null;
+
+    /**
+     * When we change the limit, do some magic to recalculate the page
+     * number we're viewing too so that the top row on the old page
+     * still exists somewhere on the new page.
+     */
+    if (changes.l && !changes.p) {
+      const cur_page  = this.getPage();
+      const cur_limit = this.getLimit();
+      let top_row  = ((cur_limit * (cur_page - 1)) + 1);
+      let newPage  = Math.ceil(top_row / limit);
+      if (newPage !== page) changes.p = newPage;
+    }
+
+    if (Object.keys(changes).length) {
+      this.set(changes);
     }
   },
 
@@ -147,32 +150,9 @@ ReactableState = React.createClass({
   },
 
   setSort (sort) {
-    this.set('s', sort.column + '_' + sort.direction);
-  },
-
-  onChangePage (num) {
-    num = parseInt(num);
-    if (isNaN(num) || num < 1) num = 1;
-    this.setPage(num);
-  },
-
-  onChangeLimit (limit) {
-    limit = parseInt(limit);
-    if (isNaN(limit) || limit < 1) limit = 1;
-
-    /**
-     * When we change the limit, do some magic to recalculate the page
-     * number we're viewing too so that the top row on the old page
-     * still exists somewhere on the new page.
-     */
-    let page       = this.getPage();
-    let top_row    = ((limit * (page - 1)) + 1);
-
-    let newPage = Math.ceil(top_row / limit);
-    this.setLimit(limit);
-    if (newPage !== page) {
-      this.setPage(newPage);
-    }
+    this.set({
+      s: sort.column + '_' + sort.direction
+    });
   },
 
   onHeadCellClick (column) {

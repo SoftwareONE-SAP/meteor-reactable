@@ -726,7 +726,7 @@ Then on the client side, the data will actually be written to a collection named
 
 #### Managing State
 
-Reactable tables have a state which is stored internally. That contains information regarding the current sort column and direction, and pagination information. If you want to be able to persist this information, for example you want to store and retrieve it from a URL query string, all you need to do is supply the table with a State Manager. A State Manager is a `Function` which returns a simple `Object` of your creation with `get`, `set` and `del` functions. The State Manager function is called once when the table is initially rendered. The default state manager simple stores and retrieves data from an internal React state and looks like this:
+Reactable tables have a state which is stored internally. That contains information regarding the current sort column and direction, and pagination information. If you want to be able to persist this information, for example you want to store and retrieve it from a URL query string, all you need to do is supply the table with a State Manager. A State Manager is a `Function` which returns a simple `Object` of your creation with `get` and `set` functions. The State Manager function is called once when the table is initially rendered. The default state manager simple stores and retrieves data from an internal React state and looks like this:
 
 ```javascript
 DefaultStateManager = function () {
@@ -734,14 +734,7 @@ DefaultStateManager = function () {
     get (k) {
       return this.state[ k ];
     },
-    set (k, v) {
-      let state = {};
-      state[ k ] = v;
-      this.setState(state);
-    },
-    del (k) {
-      let state = {};
-      state[ k ] = null;
+    set (o) {
       this.setState(state);
     },
   };
@@ -760,11 +753,14 @@ StateManager = function () {
     get (k) {
       return state[ k ];
     },
-    set (k, v) {
-      state[ k ] = v;
-    },
-    del (k) {
-      delete state[ k ];
+    set (data) {
+      Object.keys(data).forEach(function(k){
+        if (data[ k ] === null) {
+          delete state[ k ];
+        } else {
+          state[ k ] = data[ k ];
+        }
+      });
     },
   };
 };
