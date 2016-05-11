@@ -3,7 +3,7 @@ ReactableUI = React.createClass({
   mixins: [ ReactableClasses ],
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.ready || nextProps.subscribeStopped;
+    return !!(nextProps.ready || nextProps.subscribeStopped);
   },
 
   render () {
