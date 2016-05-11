@@ -16,7 +16,7 @@ ReactableUI = React.createClass({
       : 'loading',
     ]);
 
-    if (this.props.subscribeStopped) {
+    if (this.props.subscribeStopped && this.props.stopped) {
       let Component      = this.props.stopped.body;
       let ComponentProps = this.props.stopped.props;
       if (typeof ComponentProps === 'function') {
