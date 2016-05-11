@@ -97,7 +97,7 @@ var config = {
 }
 ```
 
-The class "reactable" is always included. An additional class of "loading" is added whilst the initial data set to display is being fetched so you can style based on it.
+The class "reactable" is always included. An additional class of "loading" is added whilst the initial data set to display is being fetched so you can style based on it. A class of "stopped" is added if Reactable is in control of the subscription and it stopped for whatever reason.
 
 **IMPORTANT** - Never modify `this.props`. It is Reacts immutable component properties.
 
@@ -599,6 +599,11 @@ var config = {
 ```
 
 If `config.empty.props` is a `function` rather than an `object`, it will be run each time the component is rendered.
+
+### `config.stopped` [ `Object` ]
+
+This works exactly the same as `config.empty` except the component is added if the source subscription's `onStop` event is called, i.e
+if there is an error thrown in the publication. This will only work if Reactable is responsible for creating the subscription.
 
 ### `config.paginate` [ `Object` | `Number` ]
 

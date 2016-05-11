@@ -15,6 +15,7 @@ Package.onUse(function(api) {
     'react-meteor-data@=0.1.5',
     'react-template-helper@=0.1.2',
     'templating',
+    'reactive-var',
   ], 'client');
 
   api.addFiles([

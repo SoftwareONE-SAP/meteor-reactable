@@ -69,4 +69,8 @@ ReactableConfigShape = {
     body:  T.func, // React classes
     props: T.oneOfType([ T.func, T.object ]),
   }),
+  stopped: T.shape({
+    body:  T.func, // React classes
+    props: T.oneOfType([ T.func, T.object ]),
+  }),
 };

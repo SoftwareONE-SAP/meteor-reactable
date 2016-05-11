@@ -12,6 +12,12 @@ ReactableData = React.createClass({
 
     let data = {};
 
+    if (!this._onStopVar) {
+      this._onStopVar = new ReactiveVar(null);
+    }
+    const stopped = this._onStopVar.get();
+    if (stopped) data.subscribeStopped = stopped;
+
     if (source.hasOwnProperty('ready')) {
       data.ready = source.ready.get();
     }
@@ -23,6 +29,11 @@ ReactableData = React.createClass({
         data.ready = sub.ready();
       }
     })(this.subscribe());
+
+    if (data.ready && data.subscribeStopped) {
+      delete data.subscribeStopped;
+      this._onStopVar.set(null);
+    }
 
     let statsCollection = this.serverSidePagination();
 
@@ -173,7 +184,9 @@ ReactableData = React.createClass({
       args = additionalArgs(args, arg);
     }();
 
-    return context.subscribe.call(context, name, ...args);
+    return context.subscribe.call(context, name, ...args, {
+      onStop: err => this._onStopVar.set(true),
+    });
   },
 
   /**

@@ -3,7 +3,7 @@ ReactableUI = React.createClass({
   mixins: [ ReactableClasses ],
 
   shouldComponentUpdate (nextProps) {
-    return nextProps.ready;
+    return nextProps.ready || nextProps.subscribeStopped;
   },
 
   render () {
@@ -11,8 +11,23 @@ ReactableUI = React.createClass({
     const classes = this.getClasses([
       'reactable',
       this.props.classes,
-      this.props.ready ? null : 'loading',
+        this.props.subscribeStopped ? 'stopped'
+      : this.props.ready ? null
+      : 'loading',
     ]);
+
+    if (this.props.subscribeStopped) {
+      let Component      = this.props.stopped.body;
+      let ComponentProps = this.props.stopped.props;
+      if (typeof ComponentProps === 'function') {
+        ComponentProps = ComponentProps.call(this);
+      }
+      return (
+        <div id={ this.props.id } className={ classes }>
+          <Component { ...this.props } { ...ComponentProps }/>
+        </div>
+      );
+    }
 
     if (this.props.rows.length === 0 && this.props.ready && this.props.empty) {
       let Component      = this.props.empty.body;
