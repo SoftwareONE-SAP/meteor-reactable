@@ -138,11 +138,20 @@ ReactableState = React.createClass({
   getSort () {
     const sort = this.get('s');
     if (typeof sort !== 'string') return null;
-    const matcher = sort.match(/^([0-9])+_(-?1)$/);
+    const matcher = sort.match(/^(-)?(.+)$/);
     if (!matcher) return null;
 
-    const column    = parseInt(matcher[1]);
-    const direction = parseInt(matcher[2]);
+    const direction = matcher[1] ? -1 : 1;
+    let column = matcher[2];
+
+    for (let i = 0; i < this.props.fields.length; ++i) {
+      if (this.props.fields[i].name == column) {
+        column = i;
+        break;
+      }
+    }
+    if (typeof column === 'string') column = parseInt(column)||0;
+
     if (column >= this.props.fields.length) return null;
     if (!this.props.fields[ column ].sort) return null;
 
@@ -150,9 +159,9 @@ ReactableState = React.createClass({
   },
 
   setSort (sort) {
-    this.set({
-      s: sort.column + '_' + sort.direction
-    });
+    let s = this.props.fields[ parseInt(sort.column) ].name || sort.column;
+    if (sort.direction < 0) s = `-${s}`;
+    this.set({ s });
   },
 
   onHeadCellClick (column) {
