@@ -3,11 +3,15 @@ ReactableUI = React.createClass({
   mixins: [ ReactableClasses ],
 
   shouldComponentUpdate (nextProps) {
-    return !!(nextProps.ready || nextProps.subscribeStopped);
+    // If ready state or stopped state has changed, then update
+    if (nextProps.ready            !== this.props.ready) return true;
+    if (nextProps.subscribeStopped !== this.props.subscribeStopped) return true;
+
+    // Update on any further change, but only if we're ready
+    return !!nextProps.ready;
   },
 
   render () {
-
     const classes = this.getClasses([
       'reactable',
       this.props.classes,

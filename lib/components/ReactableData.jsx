@@ -39,16 +39,21 @@ ReactableData = React.createClass({
 
     let selector = this.selector();
 
-    if (statsCollection) {
-      const stats = statsCollection.findOne({ _id: 'stats' });
-      if (stats) data.totalRows = stats.count;
-    } else {
-      data.totalRows = collection.find(selector).count();
-    }
+    if (data.ready) {
+      if (statsCollection) {
+        const stats = statsCollection.findOne({ _id: 'stats' });
+        if (stats) data.totalRows = stats.count;
+      } else {
+        data.totalRows = collection.find(selector).count();
+      }
 
-    data.rows = collection.find(selector, this.queryOptions(data.totalRows)).fetch();
-    data.rows = this.sort(data.rows);
-    data.rows = this.paginate(data.rows, data.totalRows);
+      data.rows = collection.find(selector, this.queryOptions(data.totalRows)).fetch();
+      data.rows = this.sort(data.rows);
+      data.rows = this.paginate(data.rows, data.totalRows);
+    } else {
+      data.totalRows = 0;
+      data.rows = [];
+    }
 
     return data;
   },
@@ -185,7 +190,7 @@ ReactableData = React.createClass({
     }();
 
     return context.subscribe.call(context, name, ...args, {
-      onStop: err => this._onStopVar.set(true),
+      onStop: err => { err && this._onStopVar.set(true) },
     });
   },
 
