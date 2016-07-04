@@ -24,7 +24,11 @@ ReactableState = React.createClass({
     if (this.state.stateDependency) {
       this.state.stateDependency.depend();
     }
-    return {};
+    return {
+      sort:  this.getSort(),
+      page:  this.getPage(),
+      limit: this.getLimit(),
+    };
   },
 
   render () {
@@ -32,11 +36,11 @@ ReactableState = React.createClass({
     delete props.children;
     delete props.stateManager;
 
-    props.sort = this.getSort() || this.defaultSort();
+    props.sort = this.data.sort || this.defaultSort();
     if (this.props.paginate) {
       props.paginate = {
-        limit: this.getLimit() || this.props.paginate.defaultLimit,
-        page:  this.getPage()  || this.props.paginate.defaultPage || 1,
+        limit: this.data.limit || this.props.paginate.defaultLimit,
+        page:  this.data.page  || this.props.paginate.defaultPage || 1,
         defaultLimit:   this.props.paginate.defaultLimit,
         serverSide:     this.props.paginate.serverSide,
       };
@@ -90,13 +94,13 @@ ReactableState = React.createClass({
 
   getLimit() {
     let limit = parseInt(this.get('l'));
-    limit = isNaN(limit) ? this.props.paginate.limit : limit;
+    limit = isNaN(limit) && this.props.paginate ? this.props.paginate.limit : limit;
     return limit && limit > 0 ? limit : null;
   },
 
   getPage() {
     let page = parseInt(this.get('p'));
-    page = isNaN(page) ? this.props.paginate.page : page;
+    page = isNaN(page) && this.props.paginate ? this.props.paginate.page : page;
     return page && page > 0 ? page : null;
   },
 
@@ -170,7 +174,7 @@ ReactableState = React.createClass({
     if (!field.sort) return;
 
     let sort_spec = field.sort;
-    let sort      = this.getSort() || this.defaultSort();
+    let sort      = this.data.sort || this.defaultSort();
 
     if (sort.column === column) {
       sort.direction *= -1;
