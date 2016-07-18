@@ -1,46 +1,45 @@
 Package.describe({
   name: 'centiq:reactable',
-  version: '0.0.2',
+  version: '0.1.0',
   summary: 'A library for displaying reactive data in a HTML table',
   git: 'https://github.com/Centiq/meteor-reactable',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.1.0.3');
-
-  api.use('react@=0.1.0');
+  api.versionsFrom('1.3.4.4');
+  api.use('ecmascript');
 
   api.use([
-    'react-meteor-data@=0.1.5',
-    'react-template-helper@=0.1.2',
+    'react-meteor-data@0.2.9',
+    'react-template-helper@0.2.9',
     'templating',
     'reactive-var',
   ], 'client');
 
   api.addFiles([
     'template.html',
-    'helpers.jsx',
+    'helpers.js',
   ], 'client');
 
   api.addFiles([
-    'lib/DefaultStateManager.jsx',
-    'lib/PropTypes.jsx',
-    'lib/mixins/ReactableClasses.jsx',
-    'lib/components/Reactable.jsx',
-    'lib/components/ReactableState.jsx',
-    'lib/components/ReactableData.jsx',
-    'lib/components/ReactableUI.jsx',
-    'lib/components/ReactableTable.jsx',
-    'lib/components/ReactableTableHead.jsx',
-    'lib/components/ReactableTableHeadCell.jsx',
-    'lib/components/ReactableTableRow.jsx',
-    'lib/components/ReactableTableCell.jsx',
-    'lib/components/ReactableNavigation.jsx',
+    'lib/DefaultStateManager.js',
+    'lib/PropTypes.js',
+    'lib/mixins/ReactableClasses.js',
+    'lib/components/Reactable.js',
+    'lib/components/ReactableState.js',
+    'lib/components/ReactableData.js',
+    'lib/components/ReactableUI.js',
+    'lib/components/ReactableTable.js',
+    'lib/components/ReactableTableHead.js',
+    'lib/components/ReactableTableHeadCell.js',
+    'lib/components/ReactableTableRow.js',
+    'lib/components/ReactableTableCell.js',
+    'lib/components/ReactableNavigation.js',
   ], 'client');
 
   api.addFiles([
-    'lib/Publisher.jsx',
+    'lib/Publisher.js',
   ], 'server');
 
   api.export('Reactable');
