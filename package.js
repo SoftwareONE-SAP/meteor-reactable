@@ -11,7 +11,6 @@ Package.onUse(function(api) {
   api.use('ecmascript');
 
   api.use([
-    'react-meteor-data@0.2.9',
     'react-template-helper@0.2.9',
     'templating',
     'reactive-var',
@@ -26,6 +25,7 @@ Package.onUse(function(api) {
     'lib/DefaultStateManager.js',
     'lib/PropTypes.js',
     'lib/mixins/ReactableClasses.js',
+    'lib/mixins/ReactMeteorData.js',
     'lib/components/Reactable.js',
     'lib/components/ReactableState.js',
     'lib/components/ReactableData.js',
