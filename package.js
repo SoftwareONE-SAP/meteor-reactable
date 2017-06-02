@@ -1,6 +1,6 @@
 Package.describe({
   name: 'centiq:reactable',
-  version: '0.1.3',
+  version: '0.1.4',
   summary: 'A library for displaying reactive data in a HTML table',
   git: 'https://github.com/Centiq/meteor-reactable',
   documentation: 'README.md'
