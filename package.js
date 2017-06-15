@@ -1,6 +1,6 @@
 Package.describe({
   name: 'centiq:reactable',
-  version: '0.1.3',
+  version: '0.1.4',
   summary: 'A library for displaying reactive data in a HTML table',
   git: 'https://github.com/Centiq/meteor-reactable',
   documentation: 'README.md'
@@ -11,7 +11,6 @@ Package.onUse(function(api) {
   api.use('ecmascript');
 
   api.use([
-    'react-meteor-data@0.2.9',
     'react-template-helper@0.2.9',
     'templating',
     'reactive-var',
@@ -26,6 +25,7 @@ Package.onUse(function(api) {
     'lib/DefaultStateManager.js',
     'lib/PropTypes.js',
     'lib/mixins/ReactableClasses.js',
+    'lib/mixins/ReactMeteorData.js',
     'lib/components/Reactable.js',
     'lib/components/ReactableState.js',
     'lib/components/ReactableData.js',
